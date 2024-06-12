@@ -10,6 +10,8 @@
         <ul class="sidebar-menu">
             <li class="menu-header">Home</li>
             <li class="@if (request()->routeIs('admin.dashboards.*')) active @endif"><a class="nav-link" href="{{ route('admin.dashboards.index') }}"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+            <li class="menu-header">Additional</li>
+            <li class="@if (request()->routeIs('admin.rooms.*')) active @endif"><a class="nav-link" href="{{ route('admin.rooms.index') }}"><i class="fas fa-bed"></i> <span>Kamar</span></a></li>
         </ul>
     </aside>
 </div>

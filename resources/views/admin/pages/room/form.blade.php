@@ -39,6 +39,26 @@
                         </div>
                         @enderror
                     </div>
+                    <div class="form-group">
+                        <div class="control-label">Fasilitas</div>
+                        <div class="row">
+                            @foreach($facilities as $lists)
+                                <div class="col-6">
+                                    @foreach($lists as $facility)
+                                        @php
+                                            // check if room has this facility by intersect the id
+                                            $hasThisFacility = $room->facilities->pluck('id')->intersect($facility->id)->isNotEmpty();
+                                        @endphp
+                                        <label class="custom-switch mt-2 p-0 d-block">
+                                            <input type="checkbox" @if($hasThisFacility) checked @endif name="facilities[]" value="{{ $facility->id }}" class="custom-switch-input">
+                                            <span class="custom-switch-indicator"></span>
+                                            <span class="custom-switch-description">{{ $facility->name }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>

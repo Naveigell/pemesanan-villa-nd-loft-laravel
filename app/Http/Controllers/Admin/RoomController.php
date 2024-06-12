@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RoomRequest;
+use App\Models\Facility;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
 {
@@ -14,7 +16,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = Room::paginate(10);
+        $rooms = Room::with('facilities')->paginate(10);
 
         return view('admin.pages.room.index', compact('rooms'));
     }
@@ -42,7 +44,12 @@ class RoomController extends Controller
      */
     public function edit(Room $room)
     {
-        return view('admin.pages.room.form', compact('room'));
+        $facilities = Facility::all();
+        $facilities = $facilities->chunk($facilities->count() / 2); // split facilities to 2 columns
+
+        $room->load('facilities');
+
+        return view('admin.pages.room.form', compact('room', 'facilities'));
     }
 
     /**
@@ -50,7 +57,16 @@ class RoomController extends Controller
      */
     public function update(RoomRequest $request, Room $room)
     {
-        $room->update($request->validated());
+        DB::beginTransaction();
+
+        try {
+            $room->update($request->validated());
+            $room->facilities()->sync($request->facilities);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
 
         return redirect(route('admin.rooms.index'))->with('success', 'Ruangan berhasil di ubah');
     }

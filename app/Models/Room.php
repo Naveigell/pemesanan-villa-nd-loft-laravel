@@ -10,4 +10,9 @@ class Room extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'code', 'price'];
+
+    public function facilities()
+    {
+        return $this->belongsToMany(Facility::class, 'room_facility')->withTimestamps();
+    }
 }

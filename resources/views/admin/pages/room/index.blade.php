@@ -24,6 +24,7 @@
                             <th class="col-1">No</th>
                             <th class="col-1">Nama Kamar</th>
                             <th class="col-1">Kode Kamar</th>
+                            <th class="col-1">Fasilitas</th>
                             <th class="col-1">Harga</th>
                             <th class="col-2">Aksi</th>
                         </tr>
@@ -35,7 +36,16 @@
                                     <x-iterate :pagination="$rooms" :loop="$loop"></x-iterate>
                                 </td>
                                 <td class="py-3">{{ $room->name }}</td>
-                                <td class="py-3">{{ $room->code }}</td>
+                                <td>{{ $room->code }}</td>
+                                <td>
+                                    <ul class="p-0">
+                                        @forelse ($room->facilities as $facility)
+                                            <li style="list-style-type: none;"><span class="badge badge-success">{{ $facility->name }}</span></li>
+                                        @empty
+                                            -
+                                        @endforelse
+                                    </ul>
+                                </td>
                                 <td>{{ format_price($room->price) }}</td>
                                 <td>
                                     <a href="{{ route('admin.rooms.edit', $room) }}" class="btn btn-warning"><i class="fa fa-eye"></i></a>
@@ -44,7 +54,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" style="text-align: center;">Data Empty</td>
+                                <td colspan="6" style="text-align: center;">Data Empty</td>
                             </tr>
                         @endforelse
                         </tbody>

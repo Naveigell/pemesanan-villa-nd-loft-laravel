@@ -13,3 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboards.index');
+});
+
+Route::view('/login', 'auth.login')->name('login.index');
+Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login.store');
+
+Route::get('/logout', function () {
+    auth()->logout();
+
+    return redirect(\route('index'));
+})->name('logout.store');

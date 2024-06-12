@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboards.index');
     Route::resource('rooms', \App\Http\Controllers\Admin\RoomController::class)->except('show');
+    Route::resource('facilities', \App\Http\Controllers\Admin\FacilityController::class)->except('show');
 });
 
 Route::view('/login', 'auth.login')->name('login.index');

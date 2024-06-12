@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Room;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +16,7 @@ class RoomSeeder extends Seeder
         $names = ['Mawar', 'Melati', 'Kamboja', 'Anggrek'];
 
         foreach ($names as $index => $name) {
-            \App\Models\Room::create([
+            Room::create([
                 'name' => $name,
                 'code' => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
                 'price' => ($index + 1) * 100_000,

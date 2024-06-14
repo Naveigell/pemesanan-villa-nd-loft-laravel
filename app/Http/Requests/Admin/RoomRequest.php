@@ -17,6 +17,7 @@ class RoomRequest extends BaseRequest
             'code' => 'required|string|max:10',
             'name' => 'required|string|max:255',
             'price' => 'required|min:0|integer|max:' . 100_000_000,
+            'color' => 'required|hex_color',
             'facilities' => 'nullable|array',
             'facilities.*' => 'exists:facilities,id',
         ];

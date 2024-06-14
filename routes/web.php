@@ -13,7 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::get('/', function () {
+    return 'home';
+})->name('index');
+
+Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboards.index');
     Route::resource('rooms', \App\Http\Controllers\Admin\RoomController::class)->except('show');
     Route::resource('facilities', \App\Http\Controllers\Admin\FacilityController::class)->except('show');

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('code');
             $table->decimal('price', 12, 3);
+            $table->string('color'); // used to coloring room in calendar menu
             $table->timestamps();
         });
     }

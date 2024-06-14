@@ -40,6 +40,17 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label>Warna Kamar</label>
+                        <input type="color" class="form-control price @error('color') is-invalid @enderror" name="color" value="{{ old('price', @$room ? $room->color : '') }}">
+                        @if($errors->has('color'))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('color') }}
+                            </div>
+                        @else
+                            <small class="text text-muted">Digunakan untuk menandai warna kamar pada menu kalender</small>
+                        @endif
+                    </div>
+                    <div class="form-group">
                         <div class="control-label">Fasilitas</div>
                         <div class="row">
                             @foreach($facilities as $lists)

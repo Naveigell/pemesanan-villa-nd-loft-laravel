@@ -26,6 +26,7 @@
                             <th class="col-1">Kode Kamar</th>
                             <th class="col-1">Fasilitas</th>
                             <th class="col-1">Harga</th>
+                            <th class="col-1">Warna</th>
                             <th class="col-2">Aksi</th>
                         </tr>
                         </thead>
@@ -47,6 +48,9 @@
                                     </ul>
                                 </td>
                                 <td>{{ format_price($room->price) }}</td>
+                                <td>
+                                    <span class="d-inline-block" style="background-color: {{ $room->color }}; width: 20px; height: 20px;"></span>
+                                </td>
                                 <td>
                                     <a href="{{ route('admin.rooms.edit', $room) }}" class="btn btn-warning"><i class="fa fa-eye"></i></a>
                                     <button class="btn btn-danger btn-action trigger--modal-delete cursor-pointer" data-url="{{ route('admin.rooms.destroy', $room) }}"><i class="fas fa-trash"></i></button>

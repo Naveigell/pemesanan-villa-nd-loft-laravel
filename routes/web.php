@@ -21,6 +21,8 @@ Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated'
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboards.index');
     Route::resource('rooms', \App\Http\Controllers\Admin\RoomController::class)->except('show');
     Route::resource('facilities', \App\Http\Controllers\Admin\FacilityController::class)->except('show');
+    Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->except('show');
+    Route::resource('bookings.payments', \App\Http\Controllers\Admin\PaymentController::class)->only('update');
 });
 
 Route::view('/login', 'auth.login')->name('login.index');

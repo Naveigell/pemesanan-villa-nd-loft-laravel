@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\BookingStatus;
+use App\Enums\PaymentStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,14 +14,49 @@ class Booking extends Model
 
     protected $fillable = ['room_id', 'user_id', 'code', 'customer_name', 'customer_email', 'customer_phone', 'customer_address', 'from_date', 'until_date', 'status'];
 
+    protected $casts = [
+        'status' => BookingStatus::class,
+        'from_date' => 'date',
+        'until_date' => 'date',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Determine if this transaction not belongs to any user
+     *
+     * @return bool
+     */
+    public function isNotBelongsToAnyCustomer()
+    {
+        return !$this->user_id;
+    }
+
+    /**
+     * Checks if the current instance belongs to a specific user.
+     *
+     * @param User $user The user to compare against.
+     * @return bool Returns true if the current instance belongs to the user, false otherwise.
+     */
+    public function isBelongsToUser(User $user)
+    {
+        // Compare the user IDs to determine if the current instance belongs to the user
+        return $this->user_id == $user->id;
+    }
+
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function latestPayment()
+    {
+        return $this->hasOne(Payment::class)
+                    ->where('payment_status', PaymentStatusEnum::SUCCESS->value)
+                    ->latest();
     }
 
     public function payment()

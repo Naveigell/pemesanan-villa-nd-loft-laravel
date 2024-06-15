@@ -13,6 +13,8 @@
             <li class="menu-header">Additional</li>
             <li class="@if (request()->routeIs('admin.rooms.*')) active @endif"><a class="nav-link" href="{{ route('admin.rooms.index') }}"><i class="fas fa-bed"></i> <span>Kamar</span></a></li>
             <li class="@if (request()->routeIs('admin.facilities.*')) active @endif"><a class="nav-link" href="{{ route('admin.facilities.index') }}"><i class="fas fa-broom"></i> <span>Facilitas</span></a></li>
+            <li class="menu-header">Pemesanan</li>
+            <li class="@if (request()->routeIs('admin.bookings.*')) active @endif"><a class="nav-link" href="{{ route('admin.bookings.index') }}"><i class="fas fa-book"></i> <span>Booking</span></a></li>
         </ul>
     </aside>
 </div>

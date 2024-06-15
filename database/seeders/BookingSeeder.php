@@ -2,13 +2,19 @@
 
 namespace Database\Seeders;
 
+use App\Enums\BookingStatus;
+use App\Enums\PaymentMethodEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Models\Booking;
 use App\Models\Customer;
+use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
 use Faker\Factory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 
 class BookingSeeder extends Seeder
 {
@@ -55,6 +61,7 @@ class BookingSeeder extends Seeder
                     );
                 })->exists();
 
+            // if the room has been booked by another person, create another date
             if ($isRoomBooked) {
                 continue;
             }
@@ -78,12 +85,47 @@ class BookingSeeder extends Seeder
 
                 $booking->room()->associate($room);
                 $booking->save();
+
+                $payment = $this->payment($booking);
+
+                // if it has payment, update the booking status
+                if ($payment) {
+                    $booking->update(['status' => BookingStatus::APPROVED->value]);
+                } else {
+                    // else change status to pending or cancelled because we don't have payment yet
+                    $booking->update(['status' => Arr::random([BookingStatus::PENDING->value, BookingStatus::CANCELLED->value])]);
+                }
             } catch (\Exception $exception) {
                 dd($exception->getMessage());
             }
 
             $counter++;
         }
+    }
+
+    /**
+     * Create payment instance
+     *
+     * @param Booking $booking
+     * @return Payment|null
+     */
+    private function payment(Booking $booking)
+    {
+        if (rand(0, 10) < 5) {
+            $payment = new Payment([
+                "payment_method" => PaymentMethodEnum::BANK_TRANSFER->value,
+                "payment_status" => PaymentStatusEnum::SUCCESS->value,
+            ]);
+
+            $payment->saveFile('payment_proof_image', UploadedFile::fake()->image('test.jpg', 500, 500), $payment->fullPath());
+            $payment->booking()
+                ->associate($booking)
+                ->save();
+
+            return $payment;
+        }
+
+        return null;
     }
 
     /**

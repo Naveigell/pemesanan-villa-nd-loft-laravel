@@ -22,6 +22,16 @@ class Booking extends Model
         return $this->belongsTo(Room::class);
     }
 
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     /**
      * Scope a query to only include where the booking is inside 2 dates
      *

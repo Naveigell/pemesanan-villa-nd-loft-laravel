@@ -23,6 +23,13 @@ Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated'
     Route::resource('facilities', \App\Http\Controllers\Admin\FacilityController::class)->except('show');
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->except('show');
     Route::resource('bookings.payments', \App\Http\Controllers\Admin\PaymentController::class)->only('update');
+    Route::resource('calendars', \App\Http\Controllers\Admin\BookingCalendarController::class)
+        ->only('index')
+        ->parameter('calendars', 'booking');
+});
+
+Route::prefix('api/v1/admin')->name('api.v1.admin.')->group(function () {
+   Route::resource('calendars', \App\Http\Controllers\Api\V1\Admin\BookingCalendarController::class)->only('index');
 });
 
 Route::view('/login', 'auth.login')->name('login.index');

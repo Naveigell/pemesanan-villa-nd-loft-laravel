@@ -15,4 +15,9 @@ class Room extends Model
     {
         return $this->belongsToMany(Facility::class, 'room_facility')->withTimestamps();
     }
+
+    public function getPriceIntegerAttribute()
+    {
+        return intval($this->price);
+    }
 }

@@ -52,6 +52,7 @@
                                     <span class="d-inline-block" style="background-color: {{ $room->color }}; width: 20px; height: 20px;"></span>
                                 </td>
                                 <td>
+                                    <a href="{{ route('admin.rooms.rooms-images.index', $room) }}" class="btn btn-light"><i class="fa fa-images"></i></a>
                                     <a href="{{ route('admin.rooms.edit', $room) }}" class="btn btn-warning"><i class="fa fa-eye"></i></a>
                                     <button class="btn btn-danger btn-action trigger--modal-delete cursor-pointer" data-url="{{ route('admin.rooms.destroy', $room) }}"><i class="fas fa-trash"></i></button>
                                 </td>

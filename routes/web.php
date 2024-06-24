@@ -20,6 +20,9 @@ Route::get('/', function () {
 Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboards.index');
     Route::resource('rooms', \App\Http\Controllers\Admin\RoomController::class)->except('show');
+    Route::resource('rooms.rooms-images', \App\Http\Controllers\Admin\RoomImageController::class)
+        ->only('index', 'create', 'store', 'destroy')
+        ->parameters(['rooms-images' => 'image', 'rooms' => 'room']);
     Route::resource('facilities', \App\Http\Controllers\Admin\FacilityController::class)->except('show');
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->except('show');
     Route::resource('bookings.payments', \App\Http\Controllers\Admin\PaymentController::class)->only('update');

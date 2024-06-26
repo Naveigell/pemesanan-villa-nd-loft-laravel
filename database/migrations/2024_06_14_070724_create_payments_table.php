@@ -15,9 +15,13 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('booking_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('payment_proof_image');
-            $table->string('payment_method'); // credit card, paypal, virtual account, bank_transfer, etc
-            $table->string('payment_status')->default(PaymentStatusEnum::PENDING->value); // pending, success, failed
+            $table->string('snap_token');
+            $table->json('payload');
+            $table->json('response')->nullable();
+            $table->string('signature')->nullable();
+            $table->string('status_code')->nullable();
+            $table->string('payment_type')->nullable();
+            $table->string('transaction_status')->nullable(); // will follow the midtrans payment status such like settlement, failed, etc
             $table->timestamps();
         });
     }

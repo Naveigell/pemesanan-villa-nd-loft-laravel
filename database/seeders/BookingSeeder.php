@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
+use App\Utils\Midtrans;
 use Faker\Factory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -108,19 +109,27 @@ class BookingSeeder extends Seeder
      *
      * @param Booking $booking
      * @return Payment|null
+     * @throws \Exception
      */
     private function payment(Booking $booking)
     {
         if (rand(0, 10) < 5) {
+            $midtrans = Midtrans::fake();
+
+            $response = $midtrans->transactionData();
+
             $payment = new Payment([
-                "payment_method" => PaymentMethodEnum::BANK_TRANSFER->value,
-                "payment_status" => PaymentStatusEnum::SUCCESS->value,
+                'snap_token'         => $midtrans->snapToken(),
+                'payload'            => json_encode($midtrans->payload()),
+                'response'           => json_encode($response),
+                'signature'          => $response['signature_key'],
+                'status_code'        => $response['status_code'],
+                'payment_type'       => $response['payment_type'],
+                'transaction_status' => $response['transaction_status']
             ]);
 
-            $payment->saveFile('payment_proof_image', UploadedFile::fake()->image('test.jpg', 500, 500), $payment->fullPath());
-            $payment->booking()
-                ->associate($booking)
-                ->save();
+            $payment->booking()->associate($booking);
+            $payment->save();
 
             return $payment;
         }

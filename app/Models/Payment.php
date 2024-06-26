@@ -12,7 +12,7 @@ class Payment extends Model
 {
     use HasFactory, CanSaveFile;
 
-    protected $fillable = ['booking_id', 'payment_proof_image', 'payment_method', 'payment_status'];
+    protected $fillable = ['booking_id', 'snap_token', 'payload', 'response', 'signature', 'status_code', 'payment_type', 'payment_status'];
 
     public function booking()
     {

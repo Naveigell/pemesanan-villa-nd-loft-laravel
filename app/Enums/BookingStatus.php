@@ -12,6 +12,16 @@ enum BookingStatus: string implements HasLabel, HasHtmlBadge
     case CANCELLED = 'cancelled';
 
     /**
+     * Checks if the current instance of the BookingStatus enum is approved.
+     *
+     * @return bool Returns true if the current instance is approved, false otherwise.
+     */
+    public function isApproved()
+    {
+        return $this === self::APPROVED;
+    }
+
+    /**
      * Determines the label of the enum
      *
      * @return string

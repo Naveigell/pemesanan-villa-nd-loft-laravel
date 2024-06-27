@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return 'home';
-})->name('index');
+Route::view('/', 'customer.pages.home.index')->name('index');
+Route::view('/rooms', 'customer.pages.room.index')->name('rooms.index');
+Route::view('/reservations', 'customer.pages.reservation.index')->name('reservations.index');
 
 Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboards.index');

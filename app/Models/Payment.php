@@ -7,6 +7,7 @@ use App\Enums\PaymentStatusEnum;
 use App\Traits\CanSaveFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Payment extends Model
 {
@@ -23,6 +24,20 @@ class Payment extends Model
         'payment_method' => PaymentMethodEnum::class,
         'payment_status' => PaymentStatusEnum::class,
     ];
+
+    /**
+     * Get the payment URL attribute based on the environment.
+     *
+     * @return string
+     */
+    public function getPaymentUrlAttribute()
+    {
+        if (app()->isProduction()) {
+            return Str::replace(':token', $this->snap_token, config('midtrans.production_redirect_url'));
+        }
+
+        return Str::replace(':token', $this->snap_token, config('midtrans.development_redirect_url'));
+    }
 
     public function getPaymentProofImageUrlAttribute()
     {

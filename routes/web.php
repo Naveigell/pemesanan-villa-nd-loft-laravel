@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', \App\Http\Controllers\Customer\HomeController::class)->name('index');
 Route::get('/rooms', [\App\Http\Controllers\Customer\RoomController::class, 'index'])->name('rooms.index');
-Route::get('/rooms/{room}', [\App\Http\Controllers\Customer\RoomController::class, 'show'])->name('rooms.show');
-Route::view('/reservations', 'customer.pages.reservation.index')->name('reservations.index');
+Route::get('/reservations/{room}', [\App\Http\Controllers\Customer\ReservationController::class, 'create'])->name('reservations.create');
+Route::post('/reservations/{room}', [\App\Http\Controllers\Customer\ReservationController::class, 'store'])->name('reservations.store');
 
 Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboards.index');

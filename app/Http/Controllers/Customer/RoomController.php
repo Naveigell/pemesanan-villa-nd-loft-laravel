@@ -35,9 +35,4 @@ class RoomController extends Controller
 
         return view('customer.pages.room.index', compact('rooms'));
     }
-
-    public function show(Request $request, Room $room)
-    {
-        dd($room);
-    }
 }

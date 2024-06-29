@@ -16,6 +16,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Ramsey\Uuid\Uuid;
 
 class BookingSeeder extends Seeder
 {

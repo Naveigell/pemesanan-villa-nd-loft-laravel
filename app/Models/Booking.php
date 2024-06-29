@@ -7,18 +7,36 @@ use App\Enums\PaymentStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
 
 class Booking extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['room_id', 'user_id', 'code', 'customer_name', 'customer_email', 'customer_phone', 'customer_address', 'from_date', 'until_date', 'status'];
+    protected $fillable = [
+        'room_id',
+        'user_id',
+        'code',
+        'customer_name',
+        'customer_email',
+        'customer_phone',
+        'customer_address',
+        'from_date',
+        'until_date',
+        'status',
+        'note',
+    ];
 
     protected $casts = [
         'status' => BookingStatus::class,
         'from_date' => 'date',
         'until_date' => 'date',
     ];
+
+    public function generateBookingCode()
+    {
+        $this->attributes['code'] = Uuid::uuid4()->toString();
+    }
 
     public function user()
     {
@@ -52,10 +70,25 @@ class Booking extends Model
         return $this->belongsTo(Room::class);
     }
 
+    /**
+     * Retrieves the latest paid payment for the current instance.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne The query builder for the latest paid payment.
+     */
+    public function latestPaidPayment()
+    {
+        return $this->latestPayment()
+                    ->where('payment_status', PaymentStatusEnum::SUCCESS->value);
+    }
+
+    /**
+     * Retrieves the latest payment associated with the current instance.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne The latest payment associated with the current instance.
+     */
     public function latestPayment()
     {
         return $this->hasOne(Payment::class)
-                    ->where('payment_status', PaymentStatusEnum::SUCCESS->value)
                     ->latest();
     }
 

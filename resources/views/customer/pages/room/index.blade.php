@@ -33,10 +33,11 @@
                         </div>
                     </form>
                 </div>
-
-
             </div>
         </div>
+        @if($message = session('success'))
+            <script>alert('{{ $message }}');</script>
+        @endif
     </section>
 
 
@@ -46,7 +47,7 @@
             <div class="row">
                 @foreach($rooms as $room)
                     <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                        <a href="{{ route('rooms.show', $room) }}" class="room">
+                        <a href="{{ route('reservations.create', $room) . '?' . request()->getQueryString() }}" class="room">
                             <figure class="img-wrap">
                                 <img src="{{ $room->main_image_url }}" alt="Free website template" class="img-fluid mb-3">
                             </figure>

@@ -2,7 +2,9 @@
 
 namespace App\Core;
 
+use Exception;
 use Faker\Factory;
+use Illuminate\Support\Str;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Ramsey\Uuid\Uuid;
@@ -25,6 +27,20 @@ class Midtrans
     private array $customerDetails;
 
     private $fake = false;
+
+    /**
+     * A snap token that get from midtrans
+     *
+     * @var string
+     */
+    private $snapToken;
+
+    /**
+     * A signature that get from midtrans
+     *
+     * @var string
+     */
+    private $signature;
 
     public function __construct(array $transactionDetails, array $itemsDetails = [], array $customerDetails = [])
     {
@@ -55,11 +71,21 @@ class Midtrans
      */
     public function snapToken()
     {
+        // if it's fake mode, use fake token
         if ($this->fake) {
-            return Uuid::uuid4()->toString();
+            $this->snapToken = Uuid::uuid4()->toString();
         }
 
-        return Snap::getSnapToken($this->payload());
+        if (!$this->snapToken) {
+            // if it's not fake mode, use real token
+            try {
+                $this->snapToken = Snap::getSnapToken($this->payload());
+            } catch (Exception $exception) {
+                dd($exception->getMessage(), $exception->getFile(), $this->payload());
+            }
+        }
+
+        return $this->snapToken;
     }
 
     /**
@@ -73,7 +99,14 @@ class Midtrans
             return 'https://midtrans.com';
         }
 
-        return Snap::createTransaction($this->payload())->redirect_url;
+        $token = $this->snapToken();
+
+        // replace token in redirect url
+        if (app()->isProduction()) {
+            return Str::replace(':token', $token, config('midtrans.production_redirect_url'));
+        }
+
+        return Str::replace(':token', $token, config('midtrans.development_redirect_url'));
     }
 
     public function payload()
@@ -151,7 +184,7 @@ class Midtrans
                 "store"              => "indomaret",
                 "status_message"     => "midtrans payment notification",
                 "status_code"        => $statusCode,
-                "signature_key"      => hash('sha512', $orderId . $statusCode . $grossAmount . config('midtrans.server_development_key')),
+                "signature_key"      => $this->constructSignatureKey($orderId, $statusCode, $grossAmount),
                 "settlement_time"    => date('Y-m-d H:i:s'),
                 "payment_type"       => "cstore",
                 "payment_code"       => $faker->numerify('############'),
@@ -165,6 +198,34 @@ class Midtrans
         }
 
         return null;
+    }
+
+    /**
+     * Constructs the signature key for a transaction.
+     *
+     * @param string $orderId The ID of the order.
+     * @param int $statusCode The status code of the transaction.
+     * @param float $grossAmount The gross amount of the transaction.
+     * @return string The constructed signature key.
+     */
+    public function constructSignatureKey($orderId, $statusCode, $grossAmount, $key = null)
+    {
+        // if midtrans is fake mode, use development key
+        if ($this->fake) {
+            $key = config('midtrans.server_development_key');
+        }
+
+        // if key is not set, use production key or development key
+        if (!$key) {
+            $key = app()->isProduction() ? config('midtrans.server_production_key') : config('midtrans.server_development_key');
+        }
+
+        if (!$this->signature) {
+            // the formula is got from midtrans documentation
+            $this->signature = hash('sha512', $orderId . $statusCode . $grossAmount . $key);
+        }
+
+        return $this->signature;
     }
 
     /**
@@ -208,5 +269,15 @@ class Midtrans
         ];
 
         return (new self($transactionDetails, $customerDetails, $itemDetails))->createFake();
+    }
+
+    /**
+     * Set the snap token for the object.
+     *
+     * @param string $snapToken The snap token to set
+     */
+    public function setSnapToken(string $snapToken)
+    {
+        $this->snapToken = $snapToken;
     }
 }

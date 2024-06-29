@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('from_date');
             $table->date('until_date');
             $table->string('status')->default(BookingStatus::PENDING->value);
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

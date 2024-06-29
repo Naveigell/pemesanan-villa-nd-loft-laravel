@@ -11,7 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class GuestOrderMail extends Mailable
+class GuestInvoiceMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,7 +31,7 @@ class GuestOrderMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pembelian Tiket',
+            subject: 'Invoice Pemesanan Kamar',
         );
     }
 
@@ -41,7 +41,7 @@ class GuestOrderMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            'layouts.email.guest.order_ticket',
+            'layouts.email.guest.invoice',
             with: [
                 'booking' => $this->booking
             ]

@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\GuestOrderMail;
+use App\Mail\GuestInvoiceMail;
 use App\Models\Booking;
 use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendGuestTicketOrderJob implements ShouldQueue
+class SendCustomerInvoiceJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,6 +31,6 @@ class SendGuestTicketOrderJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->booking->customer_email)->send(new GuestOrderMail($this->booking));
+        Mail::to($this->booking->customer_email)->send(new GuestInvoiceMail($this->booking));
     }
 }

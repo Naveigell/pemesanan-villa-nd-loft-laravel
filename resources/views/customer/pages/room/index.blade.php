@@ -11,53 +11,24 @@
 
             <div class="row check-availabilty" id="next">
                 <div class="block-32" data-aos="fade-up" data-aos-offset="-200">
-
-                    <form action="#">
+                    <form action="{{ route('rooms.index') }}" method="get">
                         <div class="row">
-                            <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
+                            <div class="col-md-4 mb-4 mb-lg-4 col-lg-4">
                                 <label for="checkin_date" class="font-weight-bold text-black">Check In</label>
                                 <div class="field-icon-wrap">
                                     <div class="icon"><span class="icon-calendar"></span></div>
-                                    <input type="text" id="checkin_date" class="form-control">
+                                    <input type="date" name="from" class="form-control" value="{{ request('from') }}">
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
+                            <div class="col-md-4 mb-4 mb-lg-4 col-lg-4">
                                 <label for="checkout_date" class="font-weight-bold text-black">Check Out</label>
                                 <div class="field-icon-wrap">
                                     <div class="icon"><span class="icon-calendar"></span></div>
-                                    <input type="text" id="checkout_date" class="form-control">
+                                    <input type="date" name="until" class="form-control" value="{{ request('until') }}">
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3 mb-md-0 col-lg-3">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3 mb-md-0">
-                                        <label for="adults" class="font-weight-bold text-black">Adults</label>
-                                        <div class="field-icon-wrap">
-                                            <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                            <select name="" id="adults" class="form-control">
-                                                <option value="">1</option>
-                                                <option value="">2</option>
-                                                <option value="">3</option>
-                                                <option value="">4+</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3 mb-md-0">
-                                        <label for="children" class="font-weight-bold text-black">Children</label>
-                                        <div class="field-icon-wrap">
-                                            <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                            <select name="" id="children" class="form-control">
-                                                <option value="">1</option>
-                                                <option value="">2</option>
-                                                <option value="">3</option>
-                                                <option value="">4+</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3 align-self-end">
-                                <button class="btn btn-primary btn-block text-white">Check Availabilty</button>
+                            <div class="col-md-4 col-lg-4 align-self-center" style="transform: translateY(13%);">
+                                <button class="btn btn-primary btn-block text-white" type="submit">Cek Ketersediaan</button>
                             </div>
                         </div>
                     </form>
@@ -73,123 +44,25 @@
         <div class="container">
 
             <div class="row">
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="{{ asset('assets/customer/images/img_1.jpg') }}" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Single Room</h2>
-                            <span class="text-uppercase letter-spacing-1">90$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="{{ asset('assets/customer/images/img_2.jpg') }}" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Family Room</h2>
-                            <span class="text-uppercase letter-spacing-1">120$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="{{ asset('assets/customer/images/img_3.jpg') }}" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Presidential Room</h2>
-                            <span class="text-uppercase letter-spacing-1">250$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="{{ asset('assets/customer/images/img_1.jpg') }}" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Single Room</h2>
-                            <span class="text-uppercase letter-spacing-1">90$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="{{ asset('assets/customer/images/img_2.jpg') }}" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Family Room</h2>
-                            <span class="text-uppercase letter-spacing-1">120$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-                    <a href="#" class="room">
-                        <figure class="img-wrap">
-                            <img src="{{ asset('assets/customer/images/img_3.jpg') }}" alt="Free website template" class="img-fluid mb-3">
-                        </figure>
-                        <div class="p-3 text-center room-info">
-                            <h2>Presidential Room</h2>
-                            <span class="text-uppercase letter-spacing-1">250$ / per night</span>
-                        </div>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <section class="section bg-light">
-
-        <div class="container">
-            <div class="row justify-content-center text-center mb-5">
-                <div class="col-md-7">
-                    <h2 class="heading" data-aos="fade">Great Offers</h2>
-                    <p data-aos="fade">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-                </div>
-            </div>
-
-            <div class="site-block-half d-block d-lg-flex bg-white" data-aos="fade" data-aos-delay="100">
-                <a href="#" class="image d-block bg-image-2" style="background-image: url('images/img_1.jpg');"></a>
-                <div class="text">
-                    <span class="d-block mb-4"><span class="display-4 text-primary">$199</span> <span class="text-uppercase letter-spacing-2">/ per night</span> </span>
-                    <h2 class="mb-4">Family Room</h2>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-                    <p><a href="#" class="btn btn-primary text-white">Book Now</a></p>
-                </div>
-            </div>
-            <div class="site-block-half d-block d-lg-flex bg-white" data-aos="fade" data-aos-delay="200">
-                <a href="#" class="image d-block bg-image-2 order-2" style="background-image: url('images/img_2.jpg');"></a>
-                <div class="text order-1">
-                    <span class="d-block mb-4"><span class="display-4 text-primary">$299</span> <span class="text-uppercase letter-spacing-2">/ per night</span> </span>
-                    <h2 class="mb-4">Presidential Room</h2>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-                    <p><a href="#" class="btn btn-primary text-white">Book Now</a></p>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <section class="section bg-image overlay" style="background-image: url('images/hero_4.jpg');">
-        <div class="container" >
-            <div class="row align-items-center">
-                <div class="col-12 col-md-6 text-center mb-4 mb-md-0 text-md-left" data-aos="fade-up">
-                    <h2 class="text-white font-weight-bold">A Best Place To Stay. Reserve Now!</h2>
-                </div>
-                <div class="col-12 col-md-6 text-center text-md-right" data-aos="fade-up" data-aos-delay="200">
-                    <a href="reservation.html" class="btn btn-outline-white-primary py-3 text-white px-5">Reserve Now</a>
-                </div>
+                @foreach($rooms as $room)
+                    <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
+                        <a href="{{ route('rooms.show', $room) }}" class="room">
+                            <figure class="img-wrap">
+                                <img src="{{ $room->main_image_url }}" alt="Free website template" class="img-fluid mb-3">
+                            </figure>
+                            <div class="p-3 text-center room-info">
+                                <h2>Kamar - {{ $room->name }}</h2>
+                                <span class="text-uppercase letter-spacing-1">{{ $room->price_formatted }} / per malam</span>
+                                <div style="font-size: 12px;" class="mt-3">
+                                    <label>Fasilitas: </label>
+                                    @foreach($room->facilities as $facility)
+                                        <span class="d-inline-block border px-2">{{ $facility->name }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
             </div>
         </div>
     </section>

@@ -90,6 +90,47 @@ class Booking extends Model
     }
 
     /**
+     * Scope a query to exclude records where dates are not between the specified range.
+     *
+     * @param Builder $query The query builder instance
+     * @param mixed $dates The dates to check against
+     * @return void
+     */
+    public function scopeWhereNotBetweenDates(Builder $query, $dates)
+    {
+        $whereBookedAt = $this->whereMultipleBookedAt($query, $dates, ['id']);
+
+        // and then we just use ->whereNotIn('id', $whereBookedAt) that we got above
+        $query->whereNotIn('id', $whereBookedAt);
+    }
+
+    /**
+     * Scope a query to include multiple booked dates.
+     *
+     * @param Builder $query The query builder instance
+     * @param mixed $dates The dates to check against
+     * @return Builder
+     */
+    public function scopeWhereMultipleBookedAt(Builder $query, $dates, $columns = ['*'])
+    {
+        $dates = is_array($dates) ? $dates : [$dates];
+
+        // we loop the columns of dates and whe add every date into ->whereBookedAt(), so it will has a lot of ->whereBookedAt()
+        // and then we get the id of all of them
+        return collect($dates)->reduce(function (Builder $query, $date, $index) use ($columns) {
+            // if this is first element in array, add where
+            if ($index == 0) {
+                return $query->whereBookedAt($date);
+            }
+
+            // another add or where
+            return $query->orWhere(function (Builder $query) use ($date) {
+                $query->whereBookedAt($date);
+            });
+        }, Booking::select($columns));
+    }
+
+    /**
      * Scope a query to only include where the booking is inside 2 dates
      *
      * For examples:

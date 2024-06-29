@@ -22,7 +22,7 @@ class RoomImage extends Model
             return asset("storage/rooms/{$this->image}");
         }
 
-        return "https://placehold.co/600x400";
+        return config('default_values.missing_image');
     }
 
     /**

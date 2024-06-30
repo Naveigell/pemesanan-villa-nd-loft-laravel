@@ -8,6 +8,7 @@ use App\Jobs\SendCustomerInvoiceJob;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Utils\Midtrans;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
@@ -52,7 +53,10 @@ class ReservationController extends Controller
         $until = $request->query('until');
 
         // the page should contain from and until query string, and until should greater than from
-        abort_if((!$from || !$until) && $from > $until, 404);
+        abort_if((!$from || !$until) && $from >= $until, 404);
+
+        $from  = Carbon::parse($from);
+        $until = Carbon::parse($until);
 
         DB::beginTransaction();
 
@@ -63,7 +67,7 @@ class ReservationController extends Controller
             $booking->save();
 
             $items = $room->only('id', 'name', 'code'); // remember every item should have id
-            $items['price'] = $room->price_integer; // just take formatted price because the real price attributes is float (can't input float)
+            $items['price'] = $room->price_integer * ($from->diffInDays($until) + 1); // just take formatted price because the real price attributes is float (can't input float)
             $items['quantity'] = 1;
 
             $customer = [

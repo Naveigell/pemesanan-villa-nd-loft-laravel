@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -65,9 +66,12 @@
                                             <td style="width:30%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Kamar</td>
                                             <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->room->name }}</td>
                                         </tr>
+                                        @php
+                                            $diff = $booking->from_date->diffInDays($booking->until_date) + 1;
+                                        @endphp
                                         <tr>
                                             <td style="width:30%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Harga</td>
-                                            <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->room->price_formatted }}</td>
+                                            <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->room->priceFormattedMultiplyBy($diff) }}</td>
                                         </tr>
                                     </table>
                                     <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Dimohon untuk melakukan pembayaran melalui link berikut ini

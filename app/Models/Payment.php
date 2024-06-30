@@ -39,6 +39,49 @@ class Payment extends Model
         return [];
     }
 
+    public function paymentTypeDetail()
+    {
+        $response = $this->response_array;
+
+        if (count($response) == 0) {
+            return null;
+        }
+
+        $paymentType = PaymentTypeEnum::tryFrom($response['payment_type']);
+
+        if (!$paymentType) {
+            return null;
+        }
+
+        // every payment type has their own different response, so we need to check that response in every case
+        // such like credit card has another response and bank transfer has another response
+        if ($paymentType->isCreditCard()) {
+            return $paymentType->label() . ' (' . $response['bank'] . ')';
+        }
+
+        if ($paymentType->isQris()) {
+            return $paymentType->label() . ' (' . $response['acquirer'] . ')';
+        }
+
+        if ($paymentType->isBankTransfer()) {
+            if (array_key_exists('permata_va_number', $response)) {
+                return $paymentType->label() . ' (Permata)';
+            }
+
+            if (array_key_exists('va_numbers', $response)) {
+                $item = $response['va_numbers'][0];
+
+                return $paymentType->label() . ' (' . strtoupper($item['bank']) . ')';
+            }
+        }
+
+        if ($paymentType->isStore()) {
+            return $paymentType->label() . ' (' . $response['store'] . ')';
+        }
+
+        return $paymentType->label();
+    }
+
     /**
      * Get the payment URL attribute based on the environment.
      *

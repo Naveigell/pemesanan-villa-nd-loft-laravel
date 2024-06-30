@@ -50,7 +50,7 @@
                             @method('PUT')
                             <div class="form-group">
                                 <label>Tipe Pembayaran</label>
-                                <input type="text" disabled class="form-control" value="{{ @$booking ? optional($booking->latestPayment)->payment_type->label() : '' }}">
+                                <input type="text" disabled class="form-control" value="{{ @$booking ? optional($booking->latestPayment)->paymentTypeDetail() : '' }}">
                             </div>
                             <div class="form-group">
                                 <label>Total Pembayaran</label>

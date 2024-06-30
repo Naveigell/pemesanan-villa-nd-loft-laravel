@@ -88,11 +88,11 @@ class BookingSeeder extends Seeder
                 $booking->room()->associate($room);
                 $booking->save();
 
-                $payment = $this->payment($booking);
-
-                // if it has payment, update the booking status
-                if ($payment) {
+                // if booking is approved, create payment
+                if (rand(1, 10) < 5) {
                     $booking->update(['status' => BookingStatus::APPROVED->value]);
+
+                    $this->payment($booking);
                 } else {
                     // else change status to pending or cancelled because we don't have payment yet
                     $booking->update(['status' => Arr::random([BookingStatus::PENDING->value, BookingStatus::CANCELLED->value])]);
@@ -114,28 +114,24 @@ class BookingSeeder extends Seeder
      */
     private function payment(Booking $booking)
     {
-        if (rand(0, 10) < 5) {
-            $midtrans = Midtrans::fake();
+        $midtrans = Midtrans::fake();
 
-            $response = $midtrans->transactionData();
+        $response = $midtrans->transactionData();
 
-            $payment = new Payment([
-                'snap_token'         => $midtrans->snapToken(),
-                'payload'            => json_encode($midtrans->payload()),
-                'response'           => json_encode($response),
-                'signature'          => $response['signature_key'],
-                'status_code'        => $response['status_code'],
-                'payment_type'       => $response['payment_type'],
-                'transaction_status' => $response['transaction_status']
-            ]);
+        $payment = new Payment([
+            'snap_token'         => $midtrans->snapToken(),
+            'payload'            => json_encode($midtrans->payload()),
+            'response'           => json_encode($response),
+            'signature'          => $response['signature_key'],
+            'status_code'        => $response['status_code'],
+            'payment_type'       => $response['payment_type'],
+            'transaction_status' => $response['transaction_status']
+        ]);
 
-            $payment->booking()->associate($booking);
-            $payment->save();
+        $payment->booking()->associate($booking);
+        $payment->save();
 
-            return $payment;
-        }
-
-        return null;
+        return $payment;
     }
 
     /**

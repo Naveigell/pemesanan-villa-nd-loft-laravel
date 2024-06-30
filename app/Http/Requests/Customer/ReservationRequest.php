@@ -4,6 +4,7 @@ namespace App\Http\Requests\Customer;
 
 use App\Foundations\BaseRequest;
 use App\Models\Booking;
+use Carbon\Carbon;
 
 class ReservationRequest extends BaseRequest
 {
@@ -12,7 +13,16 @@ class ReservationRequest extends BaseRequest
         $from  = $this->query('from');
         $until = $this->query('until');
 
+        // should have from and until
         if (!$from || !$until) {
+            return false;
+        }
+
+        $from  = Carbon::parse($from);
+        $until = Carbon::parse($until);
+
+        // don't give from is greater than until
+        if ($from >= $until) {
             return false;
         }
 

@@ -69,4 +69,9 @@ class Room extends Model
     {
         return format_price($this->price);
     }
+
+    public function priceFormattedMultiplyBy($value = 1)
+    {
+        return format_price($this->price * $value);
+    }
 }

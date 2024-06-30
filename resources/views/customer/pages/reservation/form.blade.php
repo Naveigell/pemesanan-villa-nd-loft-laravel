@@ -78,8 +78,21 @@
                         </div>
                         <div class="row mb-4 mt-2">
                             <div class="col-md-12 form-group">
-                                <label class="text-black font-weight-bold" for="price">Harga</label>
+                                <label class="text-black font-weight-bold" for="price">Harga (per malam)</label>
                                 <input type="text" id="price" class="form-control" name="price" disabled value="{{ $room->price_formatted }} / malam">
+                            </div>
+                        </div>
+                        @php
+                            $from  = \Carbon\Carbon::parse(request('from'));
+                            $until = \Carbon\Carbon::parse(request('until'));
+
+                            // should add 1 day to fill all the days
+                            $diff = $from->diffInDays($until) + 1;
+                        @endphp
+                        <div class="row mb-4 mt-2">
+                            <div class="col-md-12 form-group">
+                                <label class="text-black font-weight-bold" for="price">Total ({{ $diff }} malam)</label>
+                                <input type="text" id="price" class="form-control" name="price" disabled value="{{ $room->priceFormattedMultiplyBy($diff) }} / malam">
                             </div>
                         </div>
                         <hr>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\BookingStatus;
 use App\Enums\PaymentStatusEnum;
+use App\Traits\Booking\CanConstructUrlToShowDetail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Ramsey\Uuid\Uuid;
 
 class Booking extends Model
 {
-    use HasFactory;
+    use HasFactory, CanConstructUrlToShowDetail;
 
     protected $fillable = [
         'room_id',

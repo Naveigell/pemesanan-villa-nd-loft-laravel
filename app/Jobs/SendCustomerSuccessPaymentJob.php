@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\GuestSuccessPayment;
+use App\Mail\CustomerSuccessPayment;
 use App\Models\Booking;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendGuestSuccessPaymentJob implements ShouldQueue
+class SendCustomerSuccessPaymentJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -30,6 +30,6 @@ class SendGuestSuccessPaymentJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->booking->customer_email)->send(new GuestSuccessPayment($this->booking));
+        Mail::to($this->booking->customer_email)->send(new CustomerSuccessPayment($this->booking));
     }
 }

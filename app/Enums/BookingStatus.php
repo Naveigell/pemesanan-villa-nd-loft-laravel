@@ -22,6 +22,26 @@ enum BookingStatus: string implements HasLabel, HasHtmlBadge
     }
 
     /**
+     * Checks if the current instance of the BookingStatus enum is pending.
+     *
+     * @return bool Returns true if the current instance is pending, false otherwise.
+     */
+    public function isPending()
+    {
+        return $this === self::PENDING;
+    }
+
+    /**
+     * Checks if the current instance of the BookingStatus enum is cancelled.
+     *
+     * @return bool Returns true if the current instance is cancelled, false otherwise.
+     */
+    public function isCancelled()
+    {
+        return $this === self::CANCELLED;
+    }
+
+    /**
      * Determines the label of the enum
      *
      * @return string

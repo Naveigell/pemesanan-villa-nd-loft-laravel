@@ -8,8 +8,10 @@ use App\Enums\Interfaces\HasLabel;
 enum PaymentStatusEnum: string implements HasLabel, HasHtmlBadge
 {
     case PENDING = 'pending';
-    case SUCCESS = 'success';
+    case SETTLEMENT = 'settlement';
     case FAILED = 'failed';
+    case CANCEL = 'cancel';
+    case EXPIRED = 'expired';
 
     /**
      * Returns the label for this enum.
@@ -18,8 +20,10 @@ enum PaymentStatusEnum: string implements HasLabel, HasHtmlBadge
     {
         return match ($this) {
             self::PENDING => 'Menunggu',
-            self::SUCCESS => 'Berhasil',
+            self::SETTLEMENT => 'Berhasil',
             self::FAILED => 'Gagal',
+            self::CANCEL => 'Dibatalkan',
+            self::EXPIRED => 'Kadaluarsa',
         };
     }
 
@@ -28,9 +32,9 @@ enum PaymentStatusEnum: string implements HasLabel, HasHtmlBadge
      *
      * @return bool
      */
-    public function isValid()
+    public function isSettlement()
     {
-        return in_array($this, [self::SUCCESS]);
+        return in_array($this, [self::SETTLEMENT]);
     }
 
     /**
@@ -49,9 +53,9 @@ enum PaymentStatusEnum: string implements HasLabel, HasHtmlBadge
     public function toHtmlBadge()
     {
         return match ($this) {
-            self::PENDING => '<span class="badge badge-warning">' . $this->toLabel() . '</span>',
-            self::SUCCESS => '<span class="badge badge-success">' . $this->toLabel() . '</span>',
-            self::FAILED => '<span class="badge badge-danger">' . $this->toLabel() . '</span>',
+            self::PENDING => '<span class="badge badge-warning">' . $this->label() . '</span>',
+            self::SETTLEMENT => '<span class="badge badge-success">' . $this->label() . '</span>',
+            self::FAILED, self::CANCEL, self::EXPIRED => '<span class="badge badge-danger">' . $this->label() . '</span>',
         };
     }
 }

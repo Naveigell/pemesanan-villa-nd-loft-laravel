@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\GuestInvoiceMail;
+use App\Mail\CustomerInvoiceMail;
 use App\Models\Booking;
 use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
@@ -31,6 +31,6 @@ class SendCustomerInvoiceJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->booking->customer_email)->send(new GuestInvoiceMail($this->booking));
+        Mail::to($this->booking->customer_email)->send(new CustomerInvoiceMail($this->booking));
     }
 }

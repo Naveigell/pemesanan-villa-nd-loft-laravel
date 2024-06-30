@@ -229,6 +229,17 @@ class Midtrans
     }
 
     /**
+     * Creates a new instance of the class with an empty array passed as a parameter.
+     * Used for testing method such as constructSignatureKey() method.
+     *
+     * @return self A new instance of the class.
+     */
+    public static function test()
+    {
+        return new self([]);
+    }
+
+    /**
      * Generates a fake transaction and customer details for testing purposes.
      *
      * @param array $itemDetails (optional) The details of the items.

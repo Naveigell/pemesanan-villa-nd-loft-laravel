@@ -18,6 +18,8 @@ Route::get('/rooms', [\App\Http\Controllers\Customer\RoomController::class, 'ind
 Route::get('/reservations/{room}', [\App\Http\Controllers\Customer\ReservationController::class, 'create'])->name('reservations.create');
 Route::post('/reservations/{room}', [\App\Http\Controllers\Customer\ReservationController::class, 'store'])->name('reservations.store');
 
+Route::get('/payment/{booking}', [\App\Http\Controllers\Customer\PaymentController::class, 'show'])->name('payment.show');
+
 Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboards.index');
     Route::resource('rooms', \App\Http\Controllers\Admin\RoomController::class)->except('show');

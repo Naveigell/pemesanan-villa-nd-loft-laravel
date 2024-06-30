@@ -3,9 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\GuestFailedPayment;
-use App\Mail\GuestInvoiceMail;
 use App\Models\Booking;
-use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

@@ -39,11 +39,40 @@
                             <tr>
                                 <td style="padding:0 0 36px 0;color:#153643;">
                                     <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Pembayaran Berhasil!</h1>
-                                    <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">
-                                        Anda dapat melihat qr code beserta detail tiket anda pada link berikut
-                                        <a href="{{ $transaction->constructGuestTicketPageUrl() }}" class="" target="_blank">link</a> . Mohon untuk
-                                        menunjukkan tiket anda kepada petugas saat tiba di tempat wisata. Terimakasih sudah memesan tiket.
-                                    </p>
+                                    <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Berikut adalah data transaksi Anda.</p>
+                                    <table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">
+                                        <tr>
+                                            <td style="width:30%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Nomor Transaksi</td>
+                                            <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->code }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:30%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Nama</td>
+                                            <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->customer_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:30%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Email</td>
+                                            <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->customer_email }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:30%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">No Telp</td>
+                                            <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->customer_phone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:30%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Tanggal</td>
+                                            <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->from_date->format('d F Y') }} - {{ $booking->until_date->format('d F Y') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:30%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Kamar</td>
+                                            <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->room->name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:30%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Harga</td>
+                                            <td style="width:70%;padding:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">: {{ $booking->room->price_formatted }}</td>
+                                        </tr>
+
+                                        <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Dimohon untuk menunjukkan email ini kepada petugas. Detail booking anda dapat dilihat melalui link berikut
+                                            <a href="{{ $booking->constructGuestTicketPageUrl() }}" class="" target="_blank">link</a></p>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
@@ -55,7 +84,7 @@
                             <tr>
                                 <td style="padding:0;width:50%;" align="left">
                                     <p style="margin:0;font-size:14px;line-height:16px;font-family:Arial,sans-serif;color:#ffffff;">
-                                        &reg; Pembelian tiket online
+                                        &reg; Villa Nd Loft
                                     </p>
                                 </td>
                             </tr>

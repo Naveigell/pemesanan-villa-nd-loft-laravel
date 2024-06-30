@@ -13,7 +13,7 @@ class Payment extends Model
 {
     use HasFactory, CanSaveFile;
 
-    protected $fillable = ['booking_id', 'snap_token', 'payload', 'response', 'signature', 'status_code', 'payment_type', 'payment_status'];
+    protected $fillable = ['booking_id', 'snap_token', 'payload', 'response', 'signature', 'status_code', 'payment_type', 'transaction_status'];
 
     public function booking()
     {
@@ -21,8 +21,8 @@ class Payment extends Model
     }
 
     protected $casts = [
-        'payment_method' => PaymentMethodEnum::class,
-        'payment_status' => PaymentStatusEnum::class,
+        'payment_method'     => PaymentMethodEnum::class,
+        'transaction_status' => PaymentStatusEnum::class,
     ];
 
     /**

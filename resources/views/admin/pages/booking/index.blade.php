@@ -10,11 +10,6 @@
         <div class="card">
             <div class="card-header">
                 <h4>Booking</h4>
-                @if(auth()->user()->isAdmin())
-                    <div class="card-header-action">
-                        <a href="{{ route('admin.bookings.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Kamar</a>
-                    </div>
-                @endif
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive mb-3">
@@ -45,10 +40,8 @@
                                 <td><span class="badge badge-light d-block">{{ $booking->from_date->format('d F Y') }}</span> <span class="d-block text-center py-1">s/d.</span> <span class="badge badge-light d-block">{{ $booking->until_date->format('d F Y') }}</span></td>
                                 <td>{!! $booking->status->toHtmlBadge() !!}</td>
                                 <td class="py-3">
-                                    @if ($booking->latestPaidPayment)
-                                        <a href="{{ $booking->latestPaidPayment->payment_proof_image_url }}" class="image-zoom">
-                                            <img src="{{ $booking->latestPaidPayment->payment_proof_image_url }}" style="width: 150px; height: 150px;" alt="">
-                                        </a>
+                                    @if ($booking->latestPayment)
+                                        {!! $booking->latestPayment->transaction_status->toHtmlBadge() !!}
                                     @else
                                         -
                                     @endif

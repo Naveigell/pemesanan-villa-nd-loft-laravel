@@ -79,7 +79,7 @@ class Booking extends Model
     public function latestPaidPayment()
     {
         return $this->latestPayment()
-                    ->where('payment_status', PaymentStatusEnum::SUCCESS->value);
+                    ->where('transaction_status', PaymentStatusEnum::SETTLEMENT->value);
     }
 
     /**

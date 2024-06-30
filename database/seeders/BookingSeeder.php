@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\BookingStatus;
-use App\Enums\PaymentMethodEnum;
+use App\Enums\PaymentTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Booking;
 use App\Models\Customer;

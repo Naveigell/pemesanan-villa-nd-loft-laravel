@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\PaymentMethodEnum;
+use App\Enums\PaymentTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Traits\CanSaveFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,9 +21,23 @@ class Payment extends Model
     }
 
     protected $casts = [
-        'payment_method'     => PaymentMethodEnum::class,
+        'payment_type'       => PaymentTypeEnum::class,
         'transaction_status' => PaymentStatusEnum::class,
     ];
+
+    /**
+     * Get the response array attribute.
+     *
+     * @return array Returns the decoded JSON response if it exists, otherwise an empty array.
+     */
+    public function getResponseArrayAttribute()
+    {
+        if ($this->response) {
+            return json_decode($this->response, true);
+        }
+
+        return [];
+    }
 
     /**
      * Get the payment URL attribute based on the environment.

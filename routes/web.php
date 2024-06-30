@@ -27,7 +27,7 @@ Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated'
         ->only('index', 'create', 'store', 'destroy')
         ->parameters(['rooms-images' => 'image', 'rooms' => 'room']);
     Route::resource('facilities', \App\Http\Controllers\Admin\FacilityController::class)->except('show');
-    Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->except('show');
+    Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only('index', 'edit', 'update', 'destroy');
     Route::resource('bookings.payments', \App\Http\Controllers\Admin\PaymentController::class)->only('update');
     Route::resource('calendars', \App\Http\Controllers\Admin\BookingCalendarController::class)
         ->only('index')

@@ -13,7 +13,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with('latestPaidPayment')->paginate(10);
+        $bookings = Booking::with('latestPayment')->latest()->paginate(10);
 
         return view('admin.pages.booking.index', compact('bookings'));
     }

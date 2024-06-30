@@ -4,11 +4,11 @@ namespace App\Enums;
 
 use App\Enums\Interfaces\HasLabel;
 
-enum PaymentMethodEnum: string implements HasLabel
+enum PaymentTypeEnum: string implements HasLabel
 {
-    case CASH = 'CASH';
-    case CREDIT_CARD = 'CREDIT_CARD';
-    case BANK_TRANSFER = 'BANK_TRANSFER';
+    case CSTORE = 'store';
+    case CREDIT_CARD = 'credit_card';
+    case BANK_TRANSFER = 'bank_transfer';
 
 
     /**
@@ -17,7 +17,7 @@ enum PaymentMethodEnum: string implements HasLabel
     public function label(): string
     {
         return match ($this) {
-            self::CASH => 'Kas',
+            self::CSTORE => 'Toko (Indomaret atau Alfamart)',
             self::CREDIT_CARD => 'Kartu Kredit',
             self::BANK_TRANSFER => 'Transfer Bank',
         };

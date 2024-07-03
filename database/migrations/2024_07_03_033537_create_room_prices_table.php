@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rooms', function (Blueprint $table) {
+        Schema::create('room_prices', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('code');
-            $table->string('color'); // used to coloring room in calendar menu
+            $table->foreignId('room_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->double('price', 13, 3);
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rooms');
+        Schema::dropIfExists('room_prices');
     }
 };

@@ -47,7 +47,15 @@
                                         @endforelse
                                     </ul>
                                 </td>
-                                <td>{{ format_price($room->price) }}</td>
+                                <td>
+                                    <ul class="p-0">
+                                        @forelse ($room->prices as $price)
+                                            <li style="list-style-type: none;"><span class="badge badge-light">Per {{ $price->type->label() }}: {{ $price->room_price_formatted }}</span></li>
+                                        @empty
+                                            -
+                                        @endforelse
+                                    </ul>
+                                </td>
                                 <td>
                                     <span class="d-inline-block" style="background-color: {{ $room->color }}; width: 20px; height: 20px;"></span>
                                 </td>

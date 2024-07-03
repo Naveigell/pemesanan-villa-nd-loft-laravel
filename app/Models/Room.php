@@ -9,7 +9,7 @@ class Room extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'code', 'price', 'color'];
+    protected $fillable = ['name', 'code', 'color'];
 
     /**
      * Retrieves the facilities associated with the room.
@@ -48,6 +48,11 @@ class Room extends Model
     public function image()
     {
         return $this->hasOne(RoomImage::class, 'room_id');
+    }
+
+    public function prices()
+    {
+        return $this->hasMany(RoomPrice::class, 'room_id');
     }
 
     /**

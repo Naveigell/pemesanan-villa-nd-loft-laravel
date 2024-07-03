@@ -32,16 +32,30 @@
                     </div>
                     <div class="form-group">
                         <label>Harga Kamar</label>
-                        <input type="text" class="form-control price @error('price') is-invalid @enderror" name="price" value="{{ old('price', @$room ? round($room->price) : '') }}">
-                        @error('price')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+                        <div class="form-group">
+                            @php
+                                $priceTypes = \App\Enums\RoomPriceTypeEnum::cases()
+                            @endphp
+                            @foreach($priceTypes as $type)
+                                <div class="input-group mt-1">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            {{ $type->label() }}
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control price @error('prices.' . $type->value) is-invalid @enderror" name="prices[{{ $type->value }}]" value="{{ old('prices.' . $type->value, @$room ? round($room->prices->where('type', $type)->first()->price) : '') }}">
+                                    @error('prices.' . $type->value)
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            @endforeach
                         </div>
-                        @enderror
                     </div>
                     <div class="form-group">
                         <label>Warna Kamar</label>
-                        <input type="color" class="form-control price @error('color') is-invalid @enderror" name="color" value="{{ old('price', @$room ? $room->color : '') }}">
+                        <input type="color" class="form-control price @error('color') is-invalid @enderror" name="color" value="{{ old('color', @$room ? $room->color : '') }}">
                         @if($errors->has('color'))
                             <div class="invalid-feedback">
                                 {{ $errors->first('color') }}
@@ -58,7 +72,7 @@
                                     @foreach($lists as $facility)
                                         @php
                                             // check if room has this facility by intersect the id
-                                            $hasThisFacility = $room->facilities->pluck('id')->intersect($facility->id)->isNotEmpty();
+                                            $hasThisFacility = @$room && $room->facilities->pluck('id')->intersect($facility->id)->isNotEmpty();
                                         @endphp
                                         <label class="custom-switch mt-2 p-0 d-block">
                                             <input type="checkbox" @if($hasThisFacility) checked @endif name="facilities[]" value="{{ $facility->id }}" class="custom-switch-input">

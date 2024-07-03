@@ -16,6 +16,8 @@ class BookingCalendarCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return $this->collection->map(function (Booking $booking) {
+            $roomPrice = $booking->roomPrice->first();
+
             return [
                 "id" => $booking->id,
                 "code" => $booking->code,
@@ -24,6 +26,7 @@ class BookingCalendarCollection extends ResourceCollection
                 "customer_email" => $booking->customer_email,
                 "customer_address" => $booking->customer_address,
                 "booking_days" => $booking->from_date->diffInDays($booking->until_date) + 1, // should add 1 because it's not include until date
+                "booking_type" => $this->when(!is_null($roomPrice), $roomPrice), // booking in a year, month or day
                 "room" => [
                     "id" => $booking->room->id,
                     "name" => $booking->room->name,

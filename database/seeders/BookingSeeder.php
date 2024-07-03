@@ -26,7 +26,7 @@ class BookingSeeder extends Seeder
      */
     public function run(): void
     {
-        $rooms = Room::all();
+        $rooms = Room::with('prices')->get();
         $users = User::with('userable')->whereHasMorph('userable', [Customer::class])->get();
         $faker = Factory::create('id_ID');
 
@@ -93,6 +93,11 @@ class BookingSeeder extends Seeder
                     $booking->update(['status' => BookingStatus::APPROVED->value]);
 
                     $this->payment($booking);
+
+                    // sync price id from room_price into booking_room_price table
+                    $priceId = $room->prices->random()->id;
+
+                    $booking->roomPrice()->sync($priceId);
                 } else {
                     // else change status to pending or cancelled because we don't have payment yet
                     $booking->update(['status' => Arr::random([BookingStatus::PENDING->value, BookingStatus::CANCELLED->value])]);

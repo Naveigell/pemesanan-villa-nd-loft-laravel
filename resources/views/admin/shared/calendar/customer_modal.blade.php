@@ -27,10 +27,10 @@
                 <td>Tanggal Pemesanan</td>
                 <td class="field" id="date"></td>
             </tr>
-            <tr>
-                <td>Jumlah Hari</td>
-                <td class="field" id="days"></td>
-            </tr>
+{{--            <tr>--}}
+{{--                <td>Jumlah Hari</td>--}}
+{{--                <td class="field" id="days"></td>--}}
+{{--            </tr>--}}
             <tr>
                 <td>Kamar</td>
                 <td class="field" id="room"></td>

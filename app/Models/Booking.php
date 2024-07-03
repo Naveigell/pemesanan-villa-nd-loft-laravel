@@ -72,6 +72,17 @@ class Booking extends Model
     }
 
     /**
+     * Retrieves the room prices associated with the current instance.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany The query builder for the room prices.
+     */
+    public function roomPrice()
+    {
+        return $this->belongsToMany(RoomPrice::class, 'booking_room_price')
+            ->withTimestamps();
+    }
+
+    /**
      * Retrieves the latest paid payment for the current instance.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne The query builder for the latest paid payment.

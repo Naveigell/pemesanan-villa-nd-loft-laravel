@@ -107,7 +107,7 @@
             $('#phone').html(booking.customer_phone);
             $('#address').html(booking.customer_address);
             $('#room').html(booking.room.name);
-            $('#days').html(booking.booking_days + ' hari');
+            // $('#days').html(booking.booking_days + ' hari');
             $('#date').html(moment(booking.from_date).format('dddd, D MMMM YYYY') + ' s/d. ' + moment(booking.until_date).format('dddd, D MMMM YYYY'));
         }
     </script>

@@ -18,14 +18,16 @@ class BookingCalendarController extends Controller
     public function index(Request $request)
     {
         $date = $request->input('month', date('m'));
+        // create date by it month and current year
         $date = mktime(0, 0, 0, $date, 1, date('Y'));
         $date = Carbon::createfromtimestamp($date);
 
+        // get previous, current and next month, previous month by subtracting month, and next month by adding month
         $previousDate = $date->clone()->subMonth()->month;
         $currentDate = $date->month;
         $nextDate = $date->clone()->addMonth()->month;
 
-        $bookings = Booking::with('room')
+        $bookings = Booking::with('room', 'roomPrice')
             ->whereIn(DB::raw('MONTH(from_date)'), [$previousDate, $currentDate, $nextDate])
             ->where('status', BookingStatus::APPROVED->value)
             ->get();

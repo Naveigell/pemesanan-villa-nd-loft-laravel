@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\RoomPriceTypeEnum;
 use App\Mail\CustomerSuccessPayment;
 use App\Models\Booking;
 use Illuminate\Bus\Queueable;
@@ -18,11 +19,25 @@ class SendCustomerSuccessPaymentJob implements ShouldQueue
     private Booking $booking;
 
     /**
+     * The room price type.
+     */
+    private RoomPriceTypeEnum $type;
+
+    /**
+     * The total price.
+     *
+     * @var int
+     */
+    private $totalPrice;
+
+    /**
      * Create a new job instance.
      */
-    public function __construct(Booking $booking)
+    public function __construct(Booking $booking, RoomPriceTypeEnum $type, $totalPrice)
     {
-        $this->booking = $booking;
+        $this->booking    = $booking;
+        $this->totalPrice = $totalPrice;
+        $this->type       = $type;
     }
 
     /**
@@ -30,6 +45,6 @@ class SendCustomerSuccessPaymentJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->booking->customer_email)->send(new CustomerSuccessPayment($this->booking));
+        Mail::to($this->booking->customer_email)->send(new CustomerSuccessPayment($this->booking, $this->type, $this->totalPrice));
     }
 }

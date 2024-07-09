@@ -59,12 +59,12 @@
 
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <label class="text-black font-weight-bold" for="checkin_date">Date Check In</label>
-                                <input type="date" class="form-control" value="{{ request('from') }}" readonly name="from_date">
+                                <label class="text-black font-weight-bold" for="checkin_date">{{ $type->label() }} check in</label>
+                                <input type="{{ $type->fieldType() }}" class="form-control" value="{{ request('from') }}" readonly name="from_date">
                             </div>
                             <div class="col-md-6 form-group">
-                                <label class="text-black font-weight-bold" for="checkout_date">Date Check Out</label>
-                                <input type="date" class="form-control" value="{{ request('until') }}" readonly name="until_date">
+                                <label class="text-black font-weight-bold" for="checkout_date">{{ $type->label() }} check out</label>
+                                <input type="{{ $type->fieldType() }}" class="form-control" value="{{ request('until') }}" readonly name="until_date">
                             </div>
                         </div>
                         <div class="row">
@@ -78,21 +78,14 @@
                         </div>
                         <div class="row mb-4 mt-2">
                             <div class="col-md-12 form-group">
-                                <label class="text-black font-weight-bold" for="price">Harga (per malam)</label>
-                                <input type="text" id="price" class="form-control" name="price" disabled value="{{ $room->price_formatted }} / malam">
+                                <label class="text-black font-weight-bold" for="price">Harga (per {{ $type->label() }})</label>
+                                <input type="text" id="price" class="form-control" name="price" disabled value="{{ $room->price->room_price_integer_formatted }} / {{ $type->label() }}">
                             </div>
                         </div>
-                        @php
-                            $from  = \Carbon\Carbon::parse(request('from'));
-                            $until = \Carbon\Carbon::parse(request('until'));
-
-                            // should add 1 day to fill all the days
-                            $diff = $from->diffInDays($until) + 1;
-                        @endphp
                         <div class="row mb-4 mt-2">
                             <div class="col-md-12 form-group">
-                                <label class="text-black font-weight-bold" for="price">Total ({{ $diff }} malam)</label>
-                                <input type="text" id="price" class="form-control" name="price" disabled value="{{ $room->priceFormattedMultiplyBy($diff) }} / malam">
+                                <label class="text-black font-weight-bold" for="price">Total ({{ $diff }} {{ $type->label() }})</label>
+                                <input type="text" id="price" class="form-control" name="price" disabled value="{{ $room->price->priceFormattedMultiplyBy($diff) }}">
                             </div>
                         </div>
                         <hr>

@@ -25,4 +25,35 @@ class RoomPrice extends Model
     {
         return format_price($this->price);
     }
+
+    /**
+     * Get the price as an integer.
+     *
+     * @return int The price as an integer.
+     */
+    public function getPriceIntegerAttribute()
+    {
+        return intval($this->price);
+    }
+
+    /**
+     * Get the formatted room price as an integer.
+     *
+     * @return string The formatted room price as an integer.
+     */
+    public function getRoomPriceIntegerFormattedAttribute()
+    {
+        return format_price($this->getPriceIntegerAttribute());
+    }
+
+    /**
+     * Multiply the price by the given value and format it.
+     *
+     * @param int $value The value to multiply the price by. Default is 1.
+     * @return string The formatted price after multiplication.
+     */
+    public function priceFormattedMultiplyBy($value = 1)
+    {
+        return format_price($this->price * $value);
+    }
 }

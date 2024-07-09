@@ -50,6 +50,21 @@ class Room extends Model
         return $this->hasOne(RoomImage::class, 'room_id');
     }
 
+    /**
+     * Retrieves the price associated with the room.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function price()
+    {
+        return $this->hasOne(RoomPrice::class, 'room_id');
+    }
+
+    /**
+     * Retrieves the prices associated with the room.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function prices()
     {
         return $this->hasMany(RoomPrice::class, 'room_id');
@@ -63,20 +78,5 @@ class Room extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
-    }
-
-    public function getPriceIntegerAttribute()
-    {
-        return intval($this->price);
-    }
-
-    public function getPriceFormattedAttribute()
-    {
-        return format_price($this->price);
-    }
-
-    public function priceFormattedMultiplyBy($value = 1)
-    {
-        return format_price($this->price * $value);
     }
 }

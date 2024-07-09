@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Enums\RoomPriceTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\ReservationRequest;
 use App\Jobs\SendCustomerInvoiceJob;
 use App\Models\Booking;
 use App\Models\Room;
+use App\Traits\CanFormatDateTimeByType;
 use App\Utils\Midtrans;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Ramsey\Uuid\Uuid;
 
 class ReservationController extends Controller
 {
+    use CanFormatDateTimeByType;
+
     /**
      * A description of the entire PHP function.
      *
@@ -25,18 +27,32 @@ class ReservationController extends Controller
     {
         $from  = $request->query('from');
         $until = $request->query('until');
+        $type  = $request->query('type');
+        $type  = RoomPriceTypeEnum::tryFrom($type);
 
         // the page should contain from and until query string, and until should greater than from
-        abort_if((!$from || !$until) && $from > $until, 404);
+        abort_if((!$from || !$until || !$type) && $from > $until, 404);
+
+        // format date time
+        $date = $this->formatDateTime($type, $from, $until);
+
+        $from  = $date->from;
+        $until = $date->until;
+        $diff  = $this->diffOfDate($type, $from, $until);
 
         // we don't want the booking page is accessible if the room is already booked
         $isBookingExists = Booking::whereDateInsideRange($from, $until)->where('room_id', $room->id)->doesntExist();
 
         abort_if(!$isBookingExists, 404, 'Room already booked');
 
-        $room->loadMissing('facilities');
+        $room->loadMissing([
+            'facilities',
+            'price' => function ($query) use ($type) {
+                $query->where('type', $type->value);
+            }
+        ]);
 
-        return view('customer.pages.reservation.form', compact('room'));
+        return view('customer.pages.reservation.form', compact('room', 'type', 'diff'));
     }
 
     /**
@@ -51,12 +67,17 @@ class ReservationController extends Controller
     {
         $from  = $request->query('from');
         $until = $request->query('until');
+        $type  = $request->query('type');
+        $type  = RoomPriceTypeEnum::tryFrom($type);
 
         // the page should contain from and until query string, and until should greater than from
-        abort_if((!$from || !$until) && $from >= $until, 404);
+        abort_if((!$from || !$until || !$type) && $from >= $until, 404);
 
-        $from  = Carbon::parse($from);
-        $until = Carbon::parse($until);
+        // always format date time
+        $date = $this->formatDateTime($type, $from, $until);
+
+        $from  = $date->from;
+        $until = $date->until;
 
         DB::beginTransaction();
 
@@ -66,9 +87,22 @@ class ReservationController extends Controller
             $booking->generateBookingCode();
             $booking->save();
 
+            // get room price by type
+            $roomPrice = $room->prices()->where('type', $type->value)->first();
+            $diff      = $this->diffOfDate($type, $from, $until);
+
+            // connect the room price and booking
+            $booking->roomPrice()->save($roomPrice);
+
+            // get total price by multiplying room price and diff between today and until
+            // just take formatted price because the real price attributes is float (can't input float)
+            $totalPrice = $roomPrice->price_integer * $diff;
+
             $items = $room->only('id', 'name', 'code'); // remember every item should have id
-            $items['price'] = $room->price_integer * ($from->diffInDays($until) + 1); // just take formatted price because the real price attributes is float (can't input float)
-            $items['quantity'] = 1;
+            $items['price']           = $totalPrice;
+            $items['diff']            = $diff;
+            $items['quantity']        = 1;
+            $items['room_price_type'] = $type->value;
 
             $customer = [
                 "first_name" => $booking->customer_name,
@@ -78,7 +112,7 @@ class ReservationController extends Controller
 
             $midtrans = new Midtrans([
                 "order_id"     => $booking->code,
-                "gross_amount" => $room->price,
+                "gross_amount" => $totalPrice,
             ], [$items], $customer);
 
             $booking->payment()->create([
@@ -86,9 +120,16 @@ class ReservationController extends Controller
                 "payload"    => json_encode($midtrans->payload()),
             ]);
 
+            // load the room price by its type
+            $booking->loadMissing([
+                'room.price' => function ($query) use ($type) {
+                    $query->where('type', $type->value);
+                }
+            ]);
+
             DB::commit();
 
-            dispatch(new SendCustomerInvoiceJob($booking));
+            dispatch(new SendCustomerInvoiceJob($booking, $type, $totalPrice));
         } catch (\Exception $exception) {
             DB::rollBack();
 

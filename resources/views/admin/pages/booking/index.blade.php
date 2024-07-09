@@ -40,7 +40,7 @@
                                 <td><span class="badge badge-light d-block">{{ $booking->from_date->format('d F Y') }}</span> <span class="d-block text-center py-1">s/d.</span> <span class="badge badge-light d-block">{{ $booking->until_date->format('d F Y') }}</span></td>
                                 <td>{!! $booking->status->toHtmlBadge() !!}</td>
                                 <td class="py-3">
-                                    @if ($booking->latestPayment)
+                                    @if (optional($booking->latestPayment)->transaction_status)
                                         {!! $booking->latestPayment->transaction_status->toHtmlBadge() !!}
                                     @else
                                         -

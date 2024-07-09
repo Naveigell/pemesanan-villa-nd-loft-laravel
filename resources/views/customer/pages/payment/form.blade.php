@@ -42,8 +42,12 @@
                     <td>: {{ $booking->room->name }}</td>
                 </tr>
                 <tr>
-                    <td>Harga</td>
-                    <td>: {{ $booking->room->price_formatted }}</td>
+                    <td>Total Harga</td>
+                    <td>: {{ format_price($booking->latestPayment->gross_amount) }}</td>
+                </tr>
+                <tr>
+                    <td>Total {{ $booking->latestPayment->room_type_price->label() }}</td>
+                    <td>: {{ $diff }} {{ $booking->latestPayment->room_type_price->label() }}</td>
                 </tr>
                 <tr>
                     <td>Status Pembayaran</td>

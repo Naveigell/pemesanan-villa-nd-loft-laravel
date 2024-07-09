@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Traits\CanFormatDateTimeByType;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
+    use CanFormatDateTimeByType;
+
     public function show(Request $request, Booking $booking)
     {
         $token     = $request->query('token');
@@ -28,6 +31,8 @@ class PaymentController extends Controller
 
         $booking->load('latestPayment', 'room');
 
-        return view('customer.pages.payment.form', compact('booking'));
+        $diff = $this->diffOfDate($booking->latestPayment->room_type_price, $booking->from_date->startOfDay(), $booking->until_date->startOfDay());
+
+        return view('customer.pages.payment.form', compact('booking', 'diff'));
     }
 }

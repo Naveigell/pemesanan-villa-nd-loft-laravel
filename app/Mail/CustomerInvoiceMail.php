@@ -2,8 +2,10 @@
 
 namespace App\Mail;
 
+use App\Enums\RoomPriceTypeEnum;
 use App\Models\Booking;
 use App\Models\Transaction;
+use App\Traits\CanFormatDateTimeByType;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,16 +15,31 @@ use Illuminate\Queue\SerializesModels;
 
 class CustomerInvoiceMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, CanFormatDateTimeByType;
 
+    /**
+     * @var Booking
+     */
     private Booking $booking;
+
+    /**
+     * @var RoomPriceTypeEnum
+     */
+    private RoomPriceTypeEnum $type;
+
+    /**
+     * @var int
+     */
+    private $totalPrice;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Booking $booking)
+    public function __construct(Booking $booking, RoomPriceTypeEnum $type, $totalPrice)
     {
-        $this->booking = $booking;
+        $this->booking    = $booking;
+        $this->type       = $type;
+        $this->totalPrice = $totalPrice;
     }
 
     /**
@@ -40,11 +57,13 @@ class CustomerInvoiceMail extends Mailable
      */
     public function content(): Content
     {
+        [$booking, $type, $totalPrice] = [$this->booking, $this->type, $this->totalPrice];
+
+        $diff = $this->diffOfDate($type, $booking->from_date->startOfDay(), $booking->until_date->startOfDay());
+
         return new Content(
             'layouts.email.guest.invoice',
-            with: [
-                'booking' => $this->booking
-            ]
+            with: compact('booking', 'type', 'totalPrice', 'diff')
         );
     }
 }

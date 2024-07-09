@@ -7,39 +7,7 @@
     ])
     <!-- END section -->
 
-    <section class="section bg-light pb-0"  >
-        <div class="container">
-
-            <div class="row check-availabilty" id="next">
-                <div class="block-32" data-aos="fade-up" data-aos-offset="-200">
-
-                    <form action="{{ route('rooms.index') }}" method="get">
-                        <div class="row">
-                            <div class="col-md-4 mb-4 mb-lg-4 col-lg-4">
-                                <label for="checkin_date" class="font-weight-bold text-black">Check In</label>
-                                <div class="field-icon-wrap">
-                                    <div class="icon"><span class="icon-calendar"></span></div>
-                                    <input type="date" name="from" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-4 mb-lg-4 col-lg-4">
-                                <label for="checkout_date" class="font-weight-bold text-black">Check Out</label>
-                                <div class="field-icon-wrap">
-                                    <div class="icon"><span class="icon-calendar"></span></div>
-                                    <input type="date" name="until" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4 align-self-center" style="transform: translateY(13%);">
-                                <button class="btn btn-primary btn-block text-white" type="submit">Cek Ketersediaan</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-
-            </div>
-        </div>
-    </section>
+    @include('admin.shared.date.date_chooser')
 
     <section class="py-5 bg-light">
         <div class="container">

@@ -55,9 +55,9 @@ class RoomSeeder extends Seeder
     private function getBasePrice(RoomPriceTypeEnum $enum)
     {
         return match ($enum) {
-            RoomPriceTypeEnum::YEAR => 1000_000_000,
-            RoomPriceTypeEnum::MONTH => 1000_000,
-            RoomPriceTypeEnum::DAY => 100_000,
+            RoomPriceTypeEnum::YEAR => 100_000,
+            RoomPriceTypeEnum::MONTH => 10_000,
+            RoomPriceTypeEnum::DAY => 1_000,
         };
     }
 }

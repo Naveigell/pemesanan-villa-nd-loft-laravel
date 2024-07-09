@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\PaymentTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Enums\RoomPriceTypeEnum;
 use App\Traits\CanSaveFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,24 @@ class Payment extends Model
     {
         if ($this->response) {
             return json_decode($this->response, true);
+        }
+
+        return [];
+    }
+
+    /**
+     * Retrieves the payload array attribute.
+     *
+     * If the payload attribute is not empty, it decodes the JSON string
+     * into an associative array and returns it. Otherwise, it returns an
+     * empty array.
+     *
+     * @return array The decoded payload array, or an empty array if the payload
+     */
+    public function getPayloadArrayAttribute()
+    {
+        if ($this->payload) {
+            return json_decode($this->payload, true);
         }
 
         return [];
@@ -80,6 +99,45 @@ class Payment extends Model
         }
 
         return $paymentType->label();
+    }
+
+    /**
+     * Get the gross amount attribute from the response array.
+     *
+     * @return int The gross amount value, or 0 if it does not exist.
+     */
+    public function getGrossAmountAttribute()
+    {
+        $response = $this->response_array;
+
+        if (array_key_exists('gross_amount', $response)) {
+            return $response['gross_amount'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get the room type price attribute from the payload array.
+     *
+     * This function retrieves the room type price from the payload array. It assumes that the payload array contains
+     * an 'item_details' key, and that the first item in the details array has a 'room_price_type' key. If the
+     * payload array or the details array is empty, or if the 'room_price_type' key is not found, it returns null.
+     *
+     * @return RoomPriceTypeEnum|null The room type price, or null if it cannot be found.
+     */
+    public function getRoomTypePriceAttribute()
+    {
+        $payload = $this->payload_array;
+
+        /**
+         * always get the first items in payload, payload item details never be empty, because we add it manually in
+         * the controller
+         * @see \App\Http\Controllers\Customer\ReservationController@store
+         **/
+        $items = $payload['item_details'];
+
+        return RoomPriceTypeEnum::tryFrom($items[0]['room_price_type']);
     }
 
     /**

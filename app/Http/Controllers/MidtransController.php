@@ -23,7 +23,7 @@ class MidtransController extends Controller
             $orderId           = $request->input('order_id');
 
             // get booking by it's order id that we got from midtrans
-            $booking = Booking::where('code', $orderId)->first();
+            $booking = Booking::with('latestPayment')->where('code', $orderId)->first(); // latest payment never be null
 
             if ($booking) {
                 DB::beginTransaction();
@@ -45,8 +45,9 @@ class MidtransController extends Controller
 
                     // only send notification to customer if transaction status is settlement
                     if ($status->isSettlement()) {
-                        // send notification to customer
-                        dispatch(new SendCustomerSuccessPaymentJob($booking));
+                        // send notification to customer.
+                        // gross amount never be null because we update the response above in updatePayment() method
+                        dispatch(new SendCustomerSuccessPaymentJob($booking, $booking->latestPayment->room_type_price, $booking->latestPayment->gross_amount));
                     }
                 } catch (\Exception $exception) {
                     Log::alert('Failed to update booking status: ' . $exception->getMessage());

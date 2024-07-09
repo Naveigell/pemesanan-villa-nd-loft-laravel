@@ -7,9 +7,23 @@ use App\Enums\Interfaces\HasLabel;
 
 enum RoomPriceTypeEnum: string implements HasLabel, HasHtmlBadge
 {
-    case YEAR = 'year';
-    case MONTH = 'month';
     case DAY = 'day';
+    case MONTH = 'month';
+    case YEAR = 'year';
+
+    /**
+     * Returns the field type based on the current instance.
+     *
+     * @return string The field type, either 'number', 'month', or 'date'.
+     */
+    public function fieldType()
+    {
+        return match ($this) {
+            self::YEAR => 'number',
+            self::MONTH => 'month',
+            self::DAY => 'date',
+        };
+    }
 
     /**
      * Convert the data to a html badge.

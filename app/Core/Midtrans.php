@@ -279,7 +279,7 @@ class Midtrans
             ]
         ];
 
-        return (new self($transactionDetails, $customerDetails, $itemDetails))->createFake();
+        return (new self($transactionDetails, $itemDetails, $customerDetails))->createFake();
     }
 
     /**

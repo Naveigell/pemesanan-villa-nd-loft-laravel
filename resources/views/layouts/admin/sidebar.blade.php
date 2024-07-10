@@ -16,6 +16,8 @@
             <li class="menu-header">Pemesanan</li>
             <li class="@if (request()->routeIs('admin.bookings.*')) active @endif"><a class="nav-link" href="{{ route('admin.bookings.index') }}"><i class="fas fa-book"></i> <span>Booking</span></a></li>
             <li class="@if (request()->routeIs('admin.calendars.*')) active @endif"><a class="nav-link" href="{{ route('admin.calendars.index') }}"><i class="fas fa-calendar-plus"></i> <span>Kalender</span></a></li>
+            <li class="menu-header">Report</li>
+            <li class="@if (request()->routeIs('admin.reports.*')) active @endif"><a class="nav-link" href="{{ route('admin.reports.index') }}"><i class="fas fa-print"></i> <span>Laporan</span></a></li>
         </ul>
     </aside>
 </div>

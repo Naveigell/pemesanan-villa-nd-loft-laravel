@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('status_code')->nullable();
             $table->string('payment_type')->nullable();
             $table->string('transaction_status')->nullable(); // will follow the midtrans payment status such like settlement, failed, etc
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
     }

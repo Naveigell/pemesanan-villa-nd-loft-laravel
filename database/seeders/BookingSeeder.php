@@ -3,23 +3,22 @@
 namespace Database\Seeders;
 
 use App\Enums\BookingStatus;
-use App\Enums\PaymentTypeEnum;
-use App\Enums\PaymentStatusEnum;
+use App\Enums\RoomPriceTypeEnum;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\Room;
 use App\Models\User;
+use App\Traits\CanFormatDateTimeByType;
 use App\Utils\Midtrans;
 use Faker\Factory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Ramsey\Uuid\Uuid;
 
 class BookingSeeder extends Seeder
 {
+    use CanFormatDateTimeByType;
 
     /**
      * Run the database seeds.
@@ -92,12 +91,13 @@ class BookingSeeder extends Seeder
                 if (rand(1, 10) < 5) {
                     $booking->update(['status' => BookingStatus::APPROVED->value]);
 
-                    $this->payment($booking);
-
                     // sync price id from room_price into booking_room_price table
-                    $priceId = $room->prices->random()->id;
+                    // get the type of day because if we want to add another type such like month or year, should do more effort
+                    $priceId = $room->prices->where('type', RoomPriceTypeEnum::DAY)->first()->id;
 
                     $booking->roomPrice()->sync($priceId);
+
+                    $this->payment($booking);
                 } else {
                     // else change status to pending or cancelled because we don't have payment yet
                     $booking->update(['status' => Arr::random([BookingStatus::PENDING->value, BookingStatus::CANCELLED->value])]);
@@ -119,7 +119,9 @@ class BookingSeeder extends Seeder
      */
     private function payment(Booking $booking)
     {
-        $midtrans = Midtrans::fake();
+        $items = $this->itemDetails($booking);
+
+        $midtrans = Midtrans::fake([$items]);
 
         $response = $midtrans->transactionData();
 
@@ -130,13 +132,44 @@ class BookingSeeder extends Seeder
             'signature'          => $response['signature_key'],
             'status_code'        => $response['status_code'],
             'payment_type'       => $response['payment_type'],
-            'transaction_status' => $response['transaction_status']
+            'transaction_status' => $response['transaction_status'],
+            'paid_at'            => $response['transaction_time'],
         ]);
 
         $payment->booking()->associate($booking);
         $payment->save();
 
         return $payment;
+    }
+
+    /**
+     * Retrieves the item details for a given booking.
+     * @see \App\Http\Controllers\Customer\ReservationController@store for more details
+     *
+     * @param Booking $booking The booking object.
+     * @return array The item details including id, name, code, price, diff, quantity, and room_price_type.
+     */
+    private function itemDetails(Booking $booking)
+    {
+        $booking->loadMissing('roomPrice', 'room');
+
+        $room = $booking->room;
+
+        $type = $booking->roomPrice->first()->type;
+
+        $diff = $this->diffOfDate($type, $booking->from_date, $booking->until_date);
+
+        // get total price by multiplying room price and diff between today and until
+        // just take formatted price because the real price attributes is float (can't input float)
+        $totalPrice = $booking->roomPrice->first()->price_integer * $diff;
+
+        $items = $room->only('id', 'name', 'code'); // remember every item should have id
+        $items['price']           = $totalPrice;
+        $items['diff']            = $diff;
+        $items['quantity']        = 1;
+        $items['room_price_type'] = $type->value;
+
+        return $items;
     }
 
     /**

@@ -32,6 +32,8 @@ Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated'
     Route::resource('calendars', \App\Http\Controllers\Admin\BookingCalendarController::class)
         ->only('index')
         ->parameter('calendars', 'booking');
+
+    Route::resource('reports', \App\Http\Controllers\Admin\ReportController::class)->only('index', 'create');
 });
 
 Route::prefix('api/v1/admin')->name('api.v1.admin.')->group(function () {

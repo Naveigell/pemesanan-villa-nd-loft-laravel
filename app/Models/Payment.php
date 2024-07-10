@@ -14,7 +14,7 @@ class Payment extends Model
 {
     use HasFactory, CanSaveFile;
 
-    protected $fillable = ['booking_id', 'snap_token', 'payload', 'response', 'signature', 'status_code', 'payment_type', 'transaction_status'];
+    protected $fillable = ['booking_id', 'snap_token', 'payload', 'response', 'signature', 'status_code', 'payment_type', 'transaction_status', 'paid_at'];
 
     public function booking()
     {
@@ -24,6 +24,7 @@ class Payment extends Model
     protected $casts = [
         'payment_type'       => PaymentTypeEnum::class,
         'transaction_status' => PaymentStatusEnum::class,
+        'paid_at'            => 'date',
     ];
 
     /**
@@ -58,6 +59,11 @@ class Payment extends Model
         return [];
     }
 
+    /**
+     * Retrieves the payment type detail based on the response array and payment type.
+     *
+     * @return string|null The payment type detail or null if not found
+     */
     public function paymentTypeDetail()
     {
         $response = $this->response_array;
@@ -138,6 +144,22 @@ class Payment extends Model
         $items = $payload['item_details'];
 
         return RoomPriceTypeEnum::tryFrom($items[0]['room_price_type']);
+    }
+
+    /**
+     * Retrieves the item duration attribute from the payload array.
+     *
+     * This function retrieves the item duration from the payload array. It assumes that the payload array contains
+     * an 'item_details' key, and that the first item in the details array has a 'diff' key. If the
+     * payload array or the details array is empty, or if the 'diff' key is not found, it returns null.
+     *
+     * @return int|null The item duration value, or null if it cannot be found.
+     */
+    public function getItemDurationAttribute()
+    {
+        $payload = $this->payload_array;
+
+        return $payload['item_details'][0]['diff'];
     }
 
     /**

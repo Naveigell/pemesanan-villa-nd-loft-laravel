@@ -72,6 +72,7 @@ class MidtransController extends Controller
             'status_code'        => $request->input('status_code'),
             'payment_type'       => $request->input('payment_type'),
             'transaction_status' => $request->input('transaction_status'),
+            'paid_at'            => now()->toDateTimeString(),
         ]);
     }
 }

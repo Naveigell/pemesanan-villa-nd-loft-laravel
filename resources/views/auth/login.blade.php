@@ -27,6 +27,9 @@
                                         {{ $message }}
                                     </div>
                                 @enderror
+                                @if ($message = session()->get('success'))
+                                    <x-alert.success :message="$message"></x-alert.success>
+                                @endif
                                 <form method="POST" action="{{ route('login.store') }}" novalidate="">
                                     @csrf
                                     <div class="form-group">
@@ -60,9 +63,9 @@
                                         <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
                                             Login
                                         </button>
-{{--                                        <a href="{{ route('register.index') }}" class="btn btn-outline-secondary btn-lg btn-block" tabindex="4">--}}
-{{--                                            Register--}}
-{{--                                        </a>--}}
+                                        <a href="{{ route('register.index') }}" class="btn btn-outline-secondary btn-lg btn-block" tabindex="4">
+                                            Register
+                                        </a>
                                     </div>
                                 </form>
                             </div>

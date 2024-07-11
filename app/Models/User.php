@@ -43,6 +43,16 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * Sets the email_verified_at attribute to the current date and time.
+     *
+     * @return void
+     */
+    public function generateEmailVerifiedAt()
+    {
+        $this->email_verified_at = now()->toDateTimeString();
+    }
+
     public function isCustomer()
     {
         return $this->userable instanceof Customer;

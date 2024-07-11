@@ -17,7 +17,7 @@ class LoginController extends Controller
                 return redirect(route('admin.dashboards.index'));
             }
 
-            return redirect(route('admin.dashboards.index'));
+            return redirect(route('index'));
         }
 
         // if credentials doesn't match, and just return email input

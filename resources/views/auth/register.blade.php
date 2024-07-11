@@ -30,7 +30,7 @@
                             <form method="POST" action="{{ route('register.store') }}" novalidate="">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="name">Name</label>
+                                    <label for="name">Nama</label>
                                     <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}">
                                     @error('name')
                                         <div class="invalid-feedback">
@@ -39,23 +39,25 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="username">Username</label>
-                                    <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}">
-                                    @error('username')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+
 
                                 <div class="form-group">
                                     <label for="email">Email</label>
                                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}">
                                     @error('email')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone">No Telp</label>
+                                    <input id="phone" type="email" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}">
+                                    @error('phone')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                     @enderror
                                 </div>
 
@@ -65,9 +67,21 @@
                                     </div>
                                     <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}">
                                     @error('password')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-block">
+                                        <label for="address" class="control-label">Alamat</label>
+                                    </div>
+                                    <textarea name="address" id="address" cols="30" rows="10" style="min-height: 100px; resize: none;" class="@error('address') is-invalid @enderror form-control">{{ old('address') }}</textarea>
+                                    @error('address')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                     @enderror
                                 </div>
 
@@ -90,6 +104,6 @@
         </div>
     </section>
 </div>
-@include('layouts.member.script')
+@include('layouts.customer.script')
 </body>
 </html>

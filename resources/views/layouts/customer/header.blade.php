@@ -19,7 +19,12 @@
                                 <div class="col-md-6 mx-auto">
                                     <ul class="list-unstyled menu">
                                         <li @if(request()->routeIs('index')) class="active" @endif><a href="{{ route('index') }}">Home</a></li>
-                                        <li @if(request()->routeIs('rooms.*')) class="active" @endif><a href="{{ route('rooms.index') }}">Rooms</a></li>
+                                        <li @if(request()->routeIs('rooms.*')) class="active" @endif><a href="{{ route('rooms.index') }}">Kamar</a></li>
+                                        @if(!auth()->check())
+                                            <li @if(request()->routeIs('login.*')) class="active" @endif><a href="{{ route('login.index') }}">Login</a></li>
+                                        @elseif(auth()->check() && auth()->user()->isCustomer())
+                                            <li @if(request()->routeIs('logout')) class="active" @endif><a href="{{ route('logout.store') }}">Logout &nbsp; <i class="fa fa-sign-out"></i></a></li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>

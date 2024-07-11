@@ -41,7 +41,9 @@ Route::prefix('api/v1/admin')->name('api.v1.admin.')->group(function () {
 });
 
 Route::view('/login', 'auth.login')->name('login.index');
+Route::view('/register', 'auth.register')->name('register.index');
 Route::post('/login', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login.store');
+Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'store'])->name('register.store');
 
 Route::get('/logout', function () {
     auth()->logout();

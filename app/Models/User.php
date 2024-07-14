@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,6 +52,16 @@ class User extends Authenticatable
     public function generateEmailVerifiedAt()
     {
         $this->email_verified_at = now()->toDateTimeString();
+    }
+
+    /**
+     * Determines the type of the user.
+     *
+     * @return UserTypeEnum The type of the user.
+     */
+    public function type()
+    {
+        return $this->isCustomer() ? UserTypeEnum::CUSTOMER : UserTypeEnum::ADMIN;
     }
 
     public function isCustomer()

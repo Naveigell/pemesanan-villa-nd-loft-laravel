@@ -29,6 +29,7 @@ Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated'
     Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class)->only('index');
     Route::resource('facilities', \App\Http\Controllers\Admin\FacilityController::class)->except('show');
     Route::resource('bookings', \App\Http\Controllers\Admin\BookingController::class)->only('index', 'edit', 'update', 'destroy');
+    Route::resource('suggestions', \App\Http\Controllers\Admin\SuggestionController::class)->only('index', 'edit', 'update');
     Route::resource('bookings.payments', \App\Http\Controllers\Admin\PaymentController::class)->only('update');
     Route::resource('calendars', \App\Http\Controllers\Admin\BookingCalendarController::class)
         ->only('index')
@@ -39,6 +40,7 @@ Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated'
 
 Route::prefix('customer')->name('customer.')->middleware('redirect.if.unauthenticated')->group(function () {
     Route::resource('bookings', \App\Http\Controllers\Customer\BookingController::class)->only('index');
+    Route::resource('suggestions', \App\Http\Controllers\Customer\SuggestionController::class)->except('show', 'destroy');
 });
 
 Route::prefix('api/v1/admin')->name('api.v1.admin.')->group(function () {

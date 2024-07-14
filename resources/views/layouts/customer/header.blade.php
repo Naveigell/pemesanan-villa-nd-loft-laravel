@@ -29,6 +29,7 @@
                                             <li @if(request()->routeIs('login.*')) class="active" @endif><a href="{{ route('login.index') }}">Login</a></li>
                                         @elseif(auth()->check() && auth()->user()->isCustomer())
                                             <li @if(request()->routeIs('customer.bookings.*')) class="active" @endif><a href="{{ route('customer.bookings.index') }}">Booking &nbsp; <i class="fa fa-calendar menu-icon"></i></a></li>
+                                            <li @if(request()->routeIs('customer.suggestions.*')) class="active" @endif><a href="{{ route('customer.suggestions.index') }}">Saran &nbsp; <i class="fa fa-envelope-open-o menu-icon"></i></a></li>
                                             <li @if(request()->routeIs('logout')) class="active" @endif><a href="{{ route('logout.store') }}">Logout &nbsp; <i class="fa fa-sign-out menu-icon"></i></a></li>
                                         @endif
                                     </ul>

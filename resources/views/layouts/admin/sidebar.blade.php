@@ -20,6 +20,8 @@
             <li class="@if (request()->routeIs('admin.calendars.*')) active @endif"><a class="nav-link" href="{{ route('admin.calendars.index') }}"><i class="fas fa-calendar-plus"></i> <span>Kalender</span></a></li>
             <li class="menu-header">Report</li>
             <li class="@if (request()->routeIs('admin.reports.*')) active @endif"><a class="nav-link" href="{{ route('admin.reports.index') }}"><i class="fas fa-print"></i> <span>Laporan</span></a></li>
+            <li class="menu-header">Feedback</li>
+            <li class="@if (request()->routeIs('admin.suggestions.*')) active @endif"><a class="nav-link" href="{{ route('admin.suggestions.index') }}"><i class="fas fa-envelope-open"></i> <span>Saran</span></a></li>
         </ul>
     </aside>
 </div>

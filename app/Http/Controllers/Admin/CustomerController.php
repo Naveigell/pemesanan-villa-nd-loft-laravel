@@ -14,7 +14,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $users = User::whereHasMorph('userable', [Customer::class])->latest()->paginate(10);
+        $users = User::whereHasMorph('userable', [Customer::class])->with('userable')->latest()->paginate(10);
 
         return view('admin.pages.customer.index', compact('users'));
     }

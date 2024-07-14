@@ -21,10 +21,28 @@
                             <input type="hidden" id="from" name="from" value="{{ request('from') }}">
                             <input type="hidden" id="to" name="to" value="{{ request('to') }}">
                         </div>
+                        <div class="form-group col-3">
+                            <label for="from">Status</label>
+                            <select name="status" id="status" class="form-control">
+                                <x-nothing-selected></x-nothing-selected>
+                                @foreach(\App\Enums\BookingStatusEnum::cases() as $case)
+                                    <option @if(request('status') === $case->value) selected @endif value="{{ $case->value }}">{{ $case->label() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="from">Menggunakan Tanggal</label>
+                            <select name="using" id="using" class="form-control">
+                                <x-nothing-selected></x-nothing-selected>
+                                @foreach(\App\Enums\Filters\Reports\UsingEnum::cases() as $case)
+                                    <option @if(request('using') === $case->value) selected @endif value="{{ $case->value }}">{{ $case->label() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="form-group col-12">
                             <button class="btn btn-success btn-md">Filter</button>
                             @if($bookings->isNotEmpty())
-                                <a href="{{ route('admin.reports.create', ['from' => request('from'), 'to' => request('to')]) }}" class="btn btn-primary btn-md"><i class="fa fa-download"></i> &nbsp;Download</a>
+                                <a href="{{ route('admin.reports.create', request()->only('from', 'to', 'status', 'using')) }}" class="btn btn-primary btn-md"><i class="fa fa-download"></i> &nbsp;Download</a>
                             @endif
                         </div>
                     </div>
@@ -69,7 +87,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" style="text-align: center;">Data Empty</td>
+                                <td colspan="8" style="text-align: center;">Data Empty</td>
                             </tr>
                         @endforelse
                         </tbody>

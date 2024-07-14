@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Booking;
+use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
@@ -11,24 +12,18 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class BookingExport implements FromCollection, ShouldAutoSize, WithColumnFormatting, WithHeadings
 {
     /**
-     * @var string from date
+     * @var Builder
      */
-    private string $from;
-
-    /**
-     * @var string to date
-     */
-    private string $to;
+    private Builder $query;
 
     /**
      * @var string add Rp in front of number
      */
     private const FORMAT_ACCOUNTING_RP_INDONESIAN = '_("Rp"* #,##0_);_("Rp"* \(#,##0\);_("Rp"* "-"??_);_(@_)';
 
-    public function __construct(string $from, string $to)
+    public function __construct(Builder $query)
     {
-        $this->from = $from;
-        $this->to   = $to;
+        $this->query = $query;
     }
 
     /**
@@ -36,15 +31,7 @@ class BookingExport implements FromCollection, ShouldAutoSize, WithColumnFormatt
     */
     public function collection()
     {
-        [$from, $to] = [$this->from, $this->to];
-
-        $bookings = Booking::with('latestPayment', 'room')
-            ->whereHas('latestPayment', function ($query) use ($from, $to) {
-                $query->when($from && $to, function ($query) use ($from, $to) {
-                    $query->whereBetween('payments.paid_at', [$from, $to]);
-                });
-            })
-            ->latest()
+        return $this->query
             ->get()
             ->map(function (Booking $booking) {
                 return [
@@ -62,8 +49,6 @@ class BookingExport implements FromCollection, ShouldAutoSize, WithColumnFormatt
                     "Tanggal Dibayar" => $booking->latestPayment->paid_at->format('d F Y'),
                 ];
             });
-
-        return $bookings;
     }
 
     /**

@@ -38,6 +38,16 @@ enum PaymentStatusEnum: string implements HasLabel, HasHtmlBadge
     }
 
     /**
+     * Check if the current state is pending
+     *
+     * @return bool
+     */
+    public function isPending()
+    {
+        return in_array($this, [self::PENDING]);
+    }
+
+    /**
      * Check if the current state is not valid
      *
      * @return bool

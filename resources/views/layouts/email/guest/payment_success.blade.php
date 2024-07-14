@@ -75,7 +75,7 @@
                                         </tr>
 
                                         <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Dimohon untuk menunjukkan email ini kepada petugas. Detail booking anda dapat dilihat melalui link berikut
-                                            <a href="{{ $booking->constructGuestTicketPageUrl() }}" class="" target="_blank">link</a></p>
+                                            <a href="{{ $booking->constructDetailPageUrl() }}" class="" target="_blank">link</a></p>
                                     </table>
                                 </td>
                             </tr>

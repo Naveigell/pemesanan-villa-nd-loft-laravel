@@ -82,9 +82,25 @@ class ReservationController extends Controller
         DB::beginTransaction();
 
         try {
-            $booking = new Booking($request->validated());
+            $validated = $request->validated();
+
+            // if the user is logged in, set the customer name and email from the user
+            if (auth()->check() && auth()->user()->isCustomer()) {
+                $validated['customer_name']    = auth()->user()->name;
+                $validated['customer_email']   = auth()->user()->email;
+                $validated['customer_phone']   = auth()->user()->userable->phone;
+                $validated['customer_address'] = auth()->user()->userable->address;
+            }
+
+            $booking = new Booking($validated);
             $booking->room()->associate($room);
             $booking->generateBookingCode();
+
+            // if the user is logged in, set the user id in booking
+            if (auth()->check() && auth()->user()->isCustomer()) {
+                $booking->user()->associate(auth()->user());
+            }
+
             $booking->save();
 
             // get room price by type
@@ -105,9 +121,9 @@ class ReservationController extends Controller
             $items['room_price_type'] = $type->value;
 
             $customer = [
-                "first_name" => $booking->customer_name,
-                "email"      => $booking->customer_email,
-                "phone"      => $booking->customer_phone,
+                "first_name" => $validated['customer_name'],
+                "email"      => $validated['customer_email'],
+                "phone"      => $validated['customer_phone'],
             ];
 
             $midtrans = new Midtrans([

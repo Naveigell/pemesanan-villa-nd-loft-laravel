@@ -15,7 +15,7 @@ trait CanConstructUrlToShowDetail
      *
      * @return string The constructed URL
      */
-    public function constructGuestTicketPageUrl()
+    public function constructDetailPageUrl()
     {
         return route('payment.show', $this->id) . '?' . $this->buildTokenQueryString();
     }

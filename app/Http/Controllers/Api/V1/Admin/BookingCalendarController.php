@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Admin;
 
-use App\Enums\BookingStatus;
+use App\Enums\BookingStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\Admin\BookingCalendarCollection;
 use App\Models\Booking;
@@ -29,7 +29,7 @@ class BookingCalendarController extends Controller
 
         $bookings = Booking::with('room', 'roomPrice')
             ->whereIn(DB::raw('MONTH(from_date)'), [$previousDate, $currentDate, $nextDate])
-            ->where('status', BookingStatus::APPROVED->value)
+            ->where('status', BookingStatusEnum::APPROVED->value)
             ->get();
 
         return new BookingCalendarCollection($bookings);

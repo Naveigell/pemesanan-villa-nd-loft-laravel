@@ -5,7 +5,7 @@ namespace App\Enums;
 use App\Enums\Interfaces\HasHtmlBadge;
 use App\Enums\Interfaces\HasLabel;
 
-enum BookingStatus: string implements HasLabel, HasHtmlBadge
+enum BookingStatusEnum: string implements HasLabel, HasHtmlBadge
 {
     case PENDING = 'pending';
     case APPROVED = 'approved';

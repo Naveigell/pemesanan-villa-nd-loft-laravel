@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Enums\BookingStatus;
+use App\Enums\BookingStatusEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\RoomPriceTypeEnum;
 use App\Models\Booking;
 use App\Models\Customer;
@@ -89,19 +90,19 @@ class BookingSeeder extends Seeder
 
                 // if booking is approved, create payment
                 if (rand(1, 10) < 5) {
-                    $booking->update(['status' => BookingStatus::APPROVED->value]);
-
-                    // sync price id from room_price into booking_room_price table
-                    // get the type of day because if we want to add another type such like month or year, should do more effort
-                    $priceId = $room->prices->where('type', RoomPriceTypeEnum::DAY)->first()->id;
-
-                    $booking->roomPrice()->sync($priceId);
-
-                    $this->payment($booking);
+                    $booking->update(['status' => BookingStatusEnum::APPROVED->value]);
                 } else {
                     // else change status to pending or cancelled because we don't have payment yet
-                    $booking->update(['status' => Arr::random([BookingStatus::PENDING->value, BookingStatus::CANCELLED->value])]);
+                    $booking->update(['status' => Arr::random([BookingStatusEnum::PENDING->value, BookingStatusEnum::CANCELLED->value])]);
                 }
+
+                // sync price id from room_price into booking_room_price table
+                // get the type of day because if we want to add another type such like month or year, should do more effort
+                $priceId = $room->prices->where('type', RoomPriceTypeEnum::DAY)->first()->id;
+
+                $booking->roomPrice()->sync($priceId);
+
+                $this->payment($booking, $this->getPaymentStatus($booking->status->value));
             } catch (\Exception $exception) {
                 dd($exception->getMessage());
             }
@@ -114,10 +115,11 @@ class BookingSeeder extends Seeder
      * Create payment instance
      *
      * @param Booking $booking
+     * @param null $transactionStatus
      * @return Payment|null
      * @throws \Exception
      */
-    private function payment(Booking $booking)
+    private function payment(Booking $booking, $transactionStatus = null)
     {
         $items = $this->itemDetails($booking);
 
@@ -132,7 +134,7 @@ class BookingSeeder extends Seeder
             'signature'          => $response['signature_key'],
             'status_code'        => $response['status_code'],
             'payment_type'       => $response['payment_type'],
-            'transaction_status' => $response['transaction_status'],
+            'transaction_status' => $transactionStatus ?? $response['transaction_status'],
             'paid_at'            => $response['transaction_time'],
         ]);
 
@@ -140,6 +142,28 @@ class BookingSeeder extends Seeder
         $payment->save();
 
         return $payment;
+    }
+
+    /**
+     * Get the corresponding payment status based on the booking status.
+     *
+     * @param string $bookingStatus The booking status.
+     * @return string The corresponding payment status.
+     */
+    private function getPaymentStatus($bookingStatus)
+    {
+        // match booking status with payment status, if booking approved, set payment status to settlement, etc.
+        $statuses = [
+            BookingStatusEnum::APPROVED->value  => PaymentStatusEnum::SETTLEMENT->value,
+            BookingStatusEnum::PENDING->value   => PaymentStatusEnum::PENDING->value,
+            BookingStatusEnum::CANCELLED->value => PaymentStatusEnum::CANCEL->value
+        ];
+
+        if (array_key_exists($bookingStatus, $statuses)) {
+            return $statuses[$bookingStatus];
+        }
+
+        return PaymentStatusEnum::PENDING->value;
     }
 
     /**

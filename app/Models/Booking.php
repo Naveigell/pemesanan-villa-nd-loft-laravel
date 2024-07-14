@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\BookingStatus;
+use App\Enums\BookingStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Traits\Booking\CanConstructUrlToShowDetail;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,7 +29,7 @@ class Booking extends Model
     ];
 
     protected $casts = [
-        'status' => BookingStatus::class,
+        'status' => BookingStatusEnum::class,
         'from_date' => 'date',
         'until_date' => 'date',
     ];

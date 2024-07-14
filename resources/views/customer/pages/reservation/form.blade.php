@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label class="text-black font-weight-bold" for="name">Nama</label>
-                                <input type="text" id="name" class="form-control @error('customer_name') is-invalid @enderror" value="{{ old('customer_name') }}" name="customer_name">
+                                <input type="text" @if(optional(auth()->user())->isCustomer()) disabled @endif id="name" class="form-control @error('customer_name') is-invalid @enderror" value="{{ old('customer_name', auth()->user()?->name) }}" name="customer_name">
                                 @error('customer_name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -24,7 +24,7 @@
                             </div>
                             <div class="col-md-6 form-group">
                                 <label class="text-black font-weight-bold" for="phone">No Telp</label>
-                                <input type="text" id="phone" class="form-control @error('customer_phone') is-invalid @enderror" value="{{ old('customer_phone') }}" name="customer_phone">
+                                <input type="text" @if(optional(auth()->user())->isCustomer()) disabled @endif id="phone" class="form-control @error('customer_phone') is-invalid @enderror" value="{{ old('customer_phone', auth()->user()?->userable?->phone_formatted) }}" name="customer_phone">
                                 @error('customer_phone')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -36,7 +36,7 @@
                         <div class="row">
                             <div class="col-md-12 form-group">
                                 <label class="text-black font-weight-bold" for="email">Email</label>
-                                <input type="email" id="email" class="form-control @error('customer_email') is-invalid @enderror" value="{{ old('customer_email') }}" name="customer_email">
+                                <input type="email" @if(optional(auth()->user())->isCustomer()) disabled @endif id="email" class="form-control @error('customer_email') is-invalid @enderror" value="{{ old('customer_email', auth()->user()?->email) }}" name="customer_email">
                                 @error('customer_email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -48,7 +48,7 @@
                         <div class="row">
                             <div class="col-md-12 form-group">
                                 <label class="text-black font-weight-bold" for="address">Alamat</label>
-                                <input type="text" id="address" class="form-control @error('customer_address') is-invalid @enderror" value="{{ old('customer_address') }}" name="customer_address">
+                                <input type="text" @if(optional(auth()->user())->isCustomer()) disabled @endif id="address" class="form-control @error('customer_address') is-invalid @enderror" value="{{ old('customer_address', auth()->user()?->userable?->address) }}" name="customer_address">
                                 @error('customer_address')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>

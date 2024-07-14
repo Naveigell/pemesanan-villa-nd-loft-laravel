@@ -4,6 +4,11 @@
             <div class="col-6 col-lg-4 site-logo" data-aos="fade"><a href="{{ route('index') }}">Villa Nd Loft</a></div>
             <div class="col-6 col-lg-8">
 
+                <style>
+                    .menu-icon {
+                        font-size: 30px;
+                    }
+                </style>
 
                 <div class="site-menu-toggle js-site-menu-toggle"  data-aos="fade">
                     <span></span>
@@ -23,7 +28,8 @@
                                         @if(!auth()->check())
                                             <li @if(request()->routeIs('login.*')) class="active" @endif><a href="{{ route('login.index') }}">Login</a></li>
                                         @elseif(auth()->check() && auth()->user()->isCustomer())
-                                            <li @if(request()->routeIs('logout')) class="active" @endif><a href="{{ route('logout.store') }}">Logout &nbsp; <i class="fa fa-sign-out"></i></a></li>
+                                            <li @if(request()->routeIs('customer.bookings.*')) class="active" @endif><a href="{{ route('customer.bookings.index') }}">Booking &nbsp; <i class="fa fa-calendar menu-icon"></i></a></li>
+                                            <li @if(request()->routeIs('logout')) class="active" @endif><a href="{{ route('logout.store') }}">Logout &nbsp; <i class="fa fa-sign-out menu-icon"></i></a></li>
                                         @endif
                                     </ul>
                                 </div>

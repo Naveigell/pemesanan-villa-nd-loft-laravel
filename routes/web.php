@@ -36,6 +36,10 @@ Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated'
     Route::resource('reports', \App\Http\Controllers\Admin\ReportController::class)->only('index', 'create');
 });
 
+Route::prefix('customer')->name('customer.')->middleware('redirect.if.unauthenticated')->group(function () {
+    Route::resource('bookings', \App\Http\Controllers\Customer\BookingController::class)->only('index');
+});
+
 Route::prefix('api/v1/admin')->name('api.v1.admin.')->group(function () {
    Route::resource('calendars', \App\Http\Controllers\Api\V1\Admin\BookingCalendarController::class)->only('index');
 });

@@ -35,7 +35,7 @@
             <div class="row">
                 @foreach($rooms as $room)
                     <div class="col-md-6 col-lg-4" data-aos="fade-up">
-                        <a href="{{ route('reservations.create', $room) . '?' . http_build_query(['from' => now()->toDateString(), 'until' => now()->addDay()->toDateString()]) }}" class="room">
+                        <a href="{{ route('reservations.create', $room) . '?' . http_build_query(['from' => now()->toDateString(), 'until' => now()->addDay()->toDateString(), 'type' => \App\Enums\RoomPriceTypeEnum::DAY->value]) }}" class="room">
                             <figure class="img-wrap">
                                 <img src="{{ $room->main_image_url }}" alt="Free website template" class="img-fluid mb-3">
                             </figure>

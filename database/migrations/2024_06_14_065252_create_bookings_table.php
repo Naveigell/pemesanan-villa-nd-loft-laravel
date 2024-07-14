@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\BookingStatus;
+use App\Enums\BookingStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('customer_address');
             $table->date('from_date');
             $table->date('until_date');
-            $table->string('status')->default(BookingStatus::PENDING->value);
+            $table->string('status')->default(BookingStatusEnum::PENDING->value);
             $table->text('notes')->nullable();
             $table->timestamps();
         });

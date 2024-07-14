@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BookingStatus;
+use App\Enums\BookingStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Jobs\SendCustomerSuccessPaymentJob;
 use App\Models\Booking;
@@ -32,11 +32,7 @@ class MidtransController extends Controller
                     $status = PaymentStatusEnum::tryFrom($transactionStatus);
 
                     // update booking status
-                    if ($status->isSettlement()) {
-                        $booking->update(['status' => BookingStatus::APPROVED->value]);
-                    } else {
-                        $booking->update(['status' => BookingStatus::CANCELLED->value]);
-                    }
+                    $booking->update(['status' => $this->getBookingStatus($status->value)]);
 
                     // update payment
                     $this->updatePayment($request, $booking);
@@ -55,6 +51,28 @@ class MidtransController extends Controller
                 }
             }
         }
+    }
+
+    /**
+     * Retrieves the corresponding booking status based on the payment status.
+     *
+     * @param string $status The payment status.
+     * @return string The corresponding booking status.
+     */
+    private function getBookingStatus($status)
+    {
+        // match booking status with payment status, if booking approved, set payment status to settlement, etc.
+        $statuses = [
+            PaymentStatusEnum::SETTLEMENT->value => BookingStatusEnum::APPROVED->value,
+            PaymentStatusEnum::PENDING->value    => BookingStatusEnum::PENDING->value,
+            PaymentStatusEnum::CANCEL->value     => BookingStatusEnum::CANCELLED->value,
+        ];
+
+        if (array_key_exists($status, $statuses)) {
+            return $statuses[$status];
+        }
+
+        return BookingStatusEnum::PENDING->value;
     }
 
     /**

@@ -7,7 +7,7 @@
         <div class="col-lg-12 col-md-12 col-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    List pesanan yang baru masuk.
+                    Selamat datang &nbsp; <b>{{ auth()->user()->name }}</b>.
                 </div>
                 <div class="card-body">
 

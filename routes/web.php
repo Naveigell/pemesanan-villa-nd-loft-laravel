@@ -36,11 +36,17 @@ Route::prefix('admin')->name('admin.')->middleware('redirect.if.unauthenticated'
         ->parameter('calendars', 'booking');
 
     Route::resource('reports', \App\Http\Controllers\Admin\ReportController::class)->only('index', 'create');
+
+    Route::resource('profile', \App\Http\Controllers\Admin\ProfileController::class)->only('create', 'store');
+    Route::patch('profile/password', [\App\Http\Controllers\Admin\ProfileController::class, 'password'])->name('profile.password');
 });
 
 Route::prefix('customer')->name('customer.')->middleware('redirect.if.unauthenticated')->group(function () {
     Route::resource('bookings', \App\Http\Controllers\Customer\BookingController::class)->only('index');
     Route::resource('suggestions', \App\Http\Controllers\Customer\SuggestionController::class)->except('show', 'destroy');
+
+    Route::resource('profile', \App\Http\Controllers\Customer\ProfileController::class)->only('create', 'store');
+    Route::patch('profile/password', [\App\Http\Controllers\Customer\ProfileController::class, 'password'])->name('profile.password');
 });
 
 Route::prefix('api/v1/admin')->name('api.v1.admin.')->group(function () {
